@@ -1,0 +1,8 @@
+Procedures:
+- invite participants and let them sign up for a session in hroot
+- get their email addresses
+- assign participant labels randomly
+- for each participant label, there is a pre-determined role for each game
+- when we start a new session, the config file is loaded. The file specifies the role for each player in each game
+- in the end, we can easily calculate payoffs etc.
+- this method ensures that we have equal numbers in each role 
