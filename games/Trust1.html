@@ -1,9 +1,57 @@
 {{ block title }}
-    Trust Game 1
+    Spiel {{ player.round_number }}
 {{ endblock }}
 {{ block content }}
 
-    {{ formfields }}
+    <p>
+        Sie besitzen {{ C.TRUST_ENDOWMENT }}, von denen Sie eine beliebige Anzahl an einen zweiten Spieler senden können. 
+        Punkte, die Sie an Spieler 2 senden werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. 
+        Spieler 2 entscheidet dann, wie viele Punkte er Ihnen von diesem Betrag zurücksenden möchte. 
+        Sie erhalten diese Punkte zusätzlich zu den Punkten, die Sie behalten haben.
+    </p>
+
+    <p>
+        <label for="id_trust_p1_sent">Betrag senden:</label><br>
+        <input type="range" min="0" max="100" step="1" value="50" name="trust_p1_sent" id="id_trust_p1_sent">
+    </p>
+
+    <p>
+        Sie behalten: <span id="amount_kept">0</span> Punkte<br>
+        Sie senden an den zweiten Spieler: <span id="amount_sent">0</span> Punkte<br>
+        Spieler 2 erhält (Faktor {{ C.TRUST_MULTIPLIER }}): <span id="amount_received">0</span> Punkte<br>
+    </p>
+
     {{ next_button }}
 
+{{ endblock }}
+
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const multiplier = js_vars.multiplier;
+        const slider = document.getElementById('id_trust_p1_sent');
+        const sent = document.getElementById('amount_sent');
+        const kept = document.getElementById('amount_kept');
+        const received = document.getElementById('amount_received');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        slider.max = endowment;
+        next_button.disabled = true;
+        
+        slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            sent.innerText = this.value;
+            kept.innerText = endowment - this.value;
+            received.innerText = this.value * multiplier;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
 {{ endblock }}

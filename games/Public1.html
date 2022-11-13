@@ -1,9 +1,50 @@
 {{ block title }}
-    Public Good
+    Spiel {{ player.round_number }}
 {{ endblock }}
 {{ block content }}
 
-    {{ formfields }}
+    <p>
+        Sie und ein zweiter Spieler besitzen jeweils {{ C.PUBLIC_ENDOWMENT }}. Sie können beide einen beliebigen Betrag 
+        in einen gemeinsamen Topf einzahlen. Eingezahlte Beträge werden mit dem Faktor {{ multiplier }} multipliziert.
+        Der Gesamtbetrag im Topf wird dann gleichmäßig auf beide Spieler aufgeteilt. Punkte, die Sie nicht einzahlen, behalten Sie.
+    </p>
+    <p>
+        <label for="id_public_contribution">Betrag einzahlen:</label><br>
+        <input type="range" min="0" max="100" step="1" value="50" name="public_contribution" id="id_public_contribution">
+    </p>
+    
+    <p>
+        Sie behalten: <span id="amount_kept">0</span> Punkte<br>
+        Sie zahlen ein: <span id="amount_sent">0</span> Punkte
+    </p>
     {{ next_button }}
 
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const mpcr = js_vars.mpcr;
+        const slider = document.getElementById('id_public_contribution');
+        const sent = document.getElementById('amount_sent');
+        const kept = document.getElementById('amount_kept');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        slider.max = endowment;
+        next_button.disabled = true;
+        
+        slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            sent.innerText = this.value;
+            kept.innerText = endowment - this.value;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
 {{ endblock }}

@@ -22,12 +22,12 @@ class C(BaseConstants):
     TRUST_ENDOWMENT = cu(100)
     TRUST_MULTIPLIER = 3
 
-    PUBLIC_ENDOWMMENT = cu(100)
+    PUBLIC_ENDOWMENT = cu(100)
     PUBLIC_MPCR = 0.7
 
     MINIMUM_MAX_NUMBER = 100
-    MINIMUM_P1 = 0.1
-    MINIMUM_P2 = 0.05
+    MINIMUM_P1 = 1
+    MINIMUM_P2 = 0.5
     # pi(x, y) = p1 * y + p2 * (x_max - x)
 
 
@@ -55,7 +55,7 @@ class Player(BasePlayer):
     trust_p2_sent_9 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9} erhalten?")
     trust_p2_sent_10 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT} erhalten?")
 
-    public_contribution = models.CurrencyField(min=0, max=C.PUBLIC_ENDOWMMENT, label="Wie viele Punkte möchten Sie zum öffentlichen Gut beisteuern?")
+    public_contribution = models.CurrencyField(min=0, max=C.PUBLIC_ENDOWMENT, label="Wie viele Punkte möchten Sie zum öffentlichen Gut beisteuern?")
 
     minimum_number_selected = models.IntegerField(min=0, max=C.MINIMUM_MAX_NUMBER, label=f"Wählen Sie eine Zahl zwischen 0 und {C.MINIMUM_MAX_NUMBER}!")
 
@@ -247,8 +247,12 @@ def calculate_minimum_payoff(player: Player):
     my_number = myself.minimum_number_selected
     others_number = other.minimum_number_selected
 
-    my_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
-    others_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
+    if my_number >= others_number:
+        my_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
+        others_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
+    else:
+        my_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
+        others_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
 
     part.minimum_payoff = my_payoff
     other.participant.minimum_payoff = others_payoff
@@ -281,12 +285,18 @@ class DictatorIntro(Page):
 
 
 class Dictator1(Page):
+    form_model = 'player'
+    form_fields = ['dictator_amount_sent']
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['dictator']
 
-    form_model = 'player'
-    form_fields = ['dictator_amount_sent']
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            endowment=C.DICTATOR_ENDOWMENT
+        )
 
 
 class TrustIntro(Page):
@@ -299,12 +309,19 @@ class TrustIntro(Page):
 
 
 class Trust1(Page):
+    form_model = 'player'
+    form_fields = ['trust_p1_sent']
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['trust_game'] and player.participant.trust_sender_this_week
 
-    form_model = 'player'
-    form_fields = ['trust_p1_sent']
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            endowment=C.TRUST_ENDOWMENT,
+            multiplier=C.TRUST_MULTIPLIER
+        )
 
 
 class Trust2(Page):
@@ -337,12 +354,26 @@ class PublicIntro(Page):
 
 
 class Public1(Page):
+    form_model = 'player'
+    form_fields = ['public_contribution']
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['public_good']
 
-    form_model = 'player'
-    form_fields = ['public_contribution']
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            mpcr=C.PUBLIC_MPCR,
+            endowment=C.PUBLIC_ENDOWMENT
+        )
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            multiplier=C.PUBLIC_MPCR * 2,
+            endowment=C.PUBLIC_ENDOWMENT
+        )
 
 
 class MinimumIntro(Page):
@@ -359,8 +390,30 @@ class Minimum1(Page):
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['minimum_effort']
 
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            max_number=C.MINIMUM_MAX_NUMBER,
+            p1=C.MINIMUM_P1,
+            p2=C.MINIMUM_P2
+        )
+
+
+class Minimum2(Page):
     form_model = 'player'
     form_fields = ['minimum_number_selected']
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == player.participant.task_rounds['minimum_effort']
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            max_number=C.MINIMUM_MAX_NUMBER,
+            p1=C.MINIMUM_P1,
+            p2=C.MINIMUM_P2
+        )
 
 
 class PayoffCalculations(Page):
@@ -384,6 +437,7 @@ class PayoffCalculations(Page):
 
 page_sequence = [
     # DictatorIntro,
+    # DictatorInstructions,
     Dictator1,
     # TrustIntro,
     Trust1,

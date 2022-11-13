@@ -1,13 +1,50 @@
 {{ block title }}
-    Dictator Decision
+    Spiel {{ player.round_number }}
 {{ endblock }}
 {{ block content }}
 
-    Sie besitzen {{ C.DICTATOR_ENDOWMENT }}. 
+    <p>
+        Sie besitzen {{ C.DICTATOR_ENDOWMENT }} und können diesen Betrag beliebig zwischen Ihnen und einem zweiten 
+        Spieler aufteilen. Verschieben Sie den Regler um die Auswirkungen auf Ihre Auszahlung und die Auszahlung 
+        des anderen Spielers zu sehen.
+    </p>
 
-    {{ formfields }}
-
-    Punkte, die Sie nicht abgeben, behalten Sie selbst.
+    <p>
+        <label for="id_dictator_amount_sent">Betrag aufteilen:</label><br>
+        <input type="range" min="0" max="100" step="1" value="100" name="dictator_amount_sent" id="id_dictator_amount_sent">
+    </p>
+    
+    <p>
+        Ihre Auszahlung: <span id="amount_kept">0</span> Punkte<br>
+        Auszahlung des anderen Spielers: <span id="amount_sent">0</span> Punkte
+    </p>
     {{ next_button }}
 
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const slider = document.getElementById('id_dictator_amount_sent');
+        const kept = document.getElementById('amount_kept');
+        const sent = document.getElementById('amount_sent');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        slider.max = endowment;
+        next_button.disabled = true;
+        
+        slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            sent.innerText = this.value;
+            kept.innerText = endowment - this.value;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
 {{ endblock }}
