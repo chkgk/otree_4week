@@ -5,4 +5,15 @@ Procedures:
 - for each participant label, there is a pre-determined role for each game
 - when we start a new session, the config file is loaded. The file specifies the role for each player in each game
 - in the end, we can easily calculate payoffs etc.
-- this method ensures that we have equal numbers in each role 
+- this method ensures that we have equal numbers in each role
+
+
+Payoffs
+Trust game
+
+p1 sends 10
+trippled makes 30
+is in category 1
+sends 10 back
+payoff p1: 100 - 10 + 10 = 100
+payoff p2: 30 - 10 = 20 
