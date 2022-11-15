@@ -4,3 +4,11 @@ input[type='range'] {
 .page-header {
     padding: 0;
 }
+
+.text-justify {
+    text-align: justify;
+}
+
+p:has(.otree-btn-next) {
+    text-align: center;
+}

@@ -1,9 +1,15 @@
 {{ block title }}
-    Page title
+    Anleitung
 {{ endblock }}
 {{ block content }}
 
-    {{ formfields }}
+    {{ include "instructions/general_instructions.html" }}
+
+    {{ formfields }}<br>
     {{ next_button }}
 
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
 {{ endblock }}
