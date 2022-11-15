@@ -1,7 +1,7 @@
 import otree.settings
 from otree.api import *
 import random
-
+import math
 
 doc = """
 Games over 4 weeks, by Christian König-Kersting
@@ -23,12 +23,11 @@ class C(BaseConstants):
     TRUST_MULTIPLIER = 3
 
     PUBLIC_ENDOWMENT = cu(100)
-    PUBLIC_MPCR = 0.7
+    PUBLIC_MPCR = 0.8
 
     MINIMUM_MAX_NUMBER = 100
     MINIMUM_P1 = 1
     MINIMUM_P2 = 0.5
-    # pi(x, y) = p1 * y + p2 * (x_max - x)
 
 
 class Subsession(BaseSubsession):
@@ -44,16 +43,16 @@ class Player(BasePlayer):
 
     trust_p1_sent = models.CurrencyField(min=0, max=C.TRUST_ENDOWMENT, label="Wie viele Punkte möchten Sie an den anderen Spieler senden?")
 
-    trust_p2_sent_1 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10, label=f"...wenn Sie zwischen 0 und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10} erhalten?")
-    trust_p2_sent_2 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*2, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*2} erhalten?")
-    trust_p2_sent_3 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*3, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*2+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*3} erhalten?")
-    trust_p2_sent_4 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*4, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*3+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*4} erhalten?")
-    trust_p2_sent_5 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*5, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*4+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*5} erhalten?")
-    trust_p2_sent_6 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*6, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*5+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*6} erhalten?")
-    trust_p2_sent_7 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*7, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*6+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*7} erhalten?")
-    trust_p2_sent_8 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*7+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8} erhalten?")
-    trust_p2_sent_9 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9} erhalten?")
-    trust_p2_sent_10 = models.CurrencyField(min=0, max=C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT} erhalten?")
+    trust_p2_sent_1 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen 0 und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10} erhalten?")
+    trust_p2_sent_2 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*2} erhalten?")
+    trust_p2_sent_3 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*2+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*3} erhalten?")
+    trust_p2_sent_4 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*3+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*4} erhalten?")
+    trust_p2_sent_5 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*4+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*5} erhalten?")
+    trust_p2_sent_6 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*5+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*6} erhalten?")
+    trust_p2_sent_7 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*6+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*7} erhalten?")
+    trust_p2_sent_8 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*7+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8} erhalten?")
+    trust_p2_sent_9 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*8+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9} erhalten?")
+    trust_p2_sent_10 = models.IntegerField(min=0, max=100, label=f"...wenn Sie zwischen {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT/10*9+1} und {C.TRUST_MULTIPLIER*C.TRUST_ENDOWMENT} erhalten?")
 
     public_contribution = models.CurrencyField(min=0, max=C.PUBLIC_ENDOWMENT, label="Wie viele Punkte möchten Sie zum öffentlichen Gut beisteuern?")
 
@@ -179,6 +178,8 @@ def calculate_trust_payoff(player: Player):
 
 
 def _trust_game_payoff(p1, p2):
+    # check payoffs carefully, it was late.
+
     p1_sends = p1.trust_p1_sent
     p2_receives = p1_sends * C.TRUST_MULTIPLIER
 
@@ -205,8 +206,8 @@ def _trust_game_payoff(p1, p2):
     else:
         p2_sends_back = 0
 
-    p1_payoff = C.TRUST_ENDOWMENT - p1_sends + p2_sends_back
-    p2_payoff = p2_receives - p2_sends_back
+    p1_payoff = C.TRUST_ENDOWMENT - p1_sends + math.floor(p2_sends_back/100 * p1_sends)
+    p2_payoff = p2_receives - math.floor(p2_sends_back/100 * p1_sends)
 
     return p1_payoff, p2_payoff
 
@@ -283,14 +284,38 @@ class DictatorIntro(Page):
     timeout_seconds = C.SPLASH_SECONDS
     template_name = C.SPLASH_TEMPLATE
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='D')
+
 
 class Dictator1(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == player.participant.task_rounds['dictator']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='D')
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            endowment=C.DICTATOR_ENDOWMENT
+        )
+
+
+class Dictator2(Page):
     form_model = 'player'
     form_fields = ['dictator_amount_sent']
 
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['dictator']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='D')
 
     @staticmethod
     def js_vars(player: Player):
@@ -304,17 +329,22 @@ class TrustIntro(Page):
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['trust_game']
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='T')
+
     timeout_seconds = C.SPLASH_SECONDS
     template_name = C.SPLASH_TEMPLATE
 
 
 class Trust1(Page):
-    form_model = 'player'
-    form_fields = ['trust_p1_sent']
-
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == player.participant.task_rounds['trust_game'] and player.participant.trust_sender_this_week
+        return player.round_number == player.participant.task_rounds['trust_game']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='T')
 
     @staticmethod
     def js_vars(player: Player):
@@ -324,11 +354,27 @@ class Trust1(Page):
         )
 
 
-class Trust2(Page):
+class TrustP1(Page):
+    form_model = 'player'
+    form_fields = ['trust_p1_sent']
+
     @staticmethod
     def is_displayed(player: Player):
-        return player.round_number == player.participant.task_rounds['trust_game'] and not player.participant.trust_sender_this_week
+        return player.round_number == player.participant.task_rounds['trust_game'] and player.participant.trust_sender_this_week
 
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='T')
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            endowment=C.TRUST_ENDOWMENT,
+            multiplier=C.TRUST_MULTIPLIER
+        )
+
+
+class TrustP2(Page):
     form_model = 'player'
     form_fields = [
         'trust_p2_sent_1',
@@ -343,17 +389,57 @@ class Trust2(Page):
         'trust_p2_sent_10',
     ]
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == player.participant.task_rounds['trust_game'] and not player.participant.trust_sender_this_week
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='T')
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            endowment=C.TRUST_ENDOWMENT,
+            multiplier=C.TRUST_MULTIPLIER
+        )
+
 
 class PublicIntro(Page):
+    timeout_seconds = C.SPLASH_SECONDS
+    template_name = C.SPLASH_TEMPLATE
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['public_good']
 
-    timeout_seconds = C.SPLASH_SECONDS
-    template_name = C.SPLASH_TEMPLATE
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='P')
 
 
 class Public1(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == player.participant.task_rounds['public_good']
+
+    @staticmethod
+    def js_vars(player: Player):
+        return dict(
+            mpcr=C.PUBLIC_MPCR,
+            endowment=C.PUBLIC_ENDOWMENT
+        )
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(
+            multiplier=C.PUBLIC_MPCR * 2,
+            endowment=C.PUBLIC_ENDOWMENT,
+            spiel='P'
+        )
+
+
+class Public2(Page):
     form_model = 'player'
     form_fields = ['public_contribution']
 
@@ -372,23 +458,32 @@ class Public1(Page):
     def vars_for_template(player: Player):
         return dict(
             multiplier=C.PUBLIC_MPCR * 2,
-            endowment=C.PUBLIC_ENDOWMENT
+            endowment=C.PUBLIC_ENDOWMENT,
+            spiel='P'
         )
 
 
 class MinimumIntro(Page):
+    timeout_seconds = C.SPLASH_SECONDS
+    template_name = C.SPLASH_TEMPLATE
+
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['minimum_effort']
 
-    timeout_seconds = C.SPLASH_SECONDS
-    template_name = C.SPLASH_TEMPLATE
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='P')
 
 
 class Minimum1(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['minimum_effort']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='M')
 
     @staticmethod
     def js_vars(player: Player):
@@ -406,6 +501,10 @@ class Minimum2(Page):
     @staticmethod
     def is_displayed(player: Player):
         return player.round_number == player.participant.task_rounds['minimum_effort']
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(spiel='M')
 
     @staticmethod
     def js_vars(player: Player):
@@ -439,12 +538,16 @@ page_sequence = [
     # DictatorIntro,
     # DictatorInstructions,
     Dictator1,
+    Dictator2,
     # TrustIntro,
     Trust1,
-    Trust2,
+    TrustP1,
+    TrustP2,
     # PublicIntro,
     Public1,
+    Public2,
     # MinimumIntro,
     Minimum1,
+    Minimum2,
     PayoffCalculations
 ]

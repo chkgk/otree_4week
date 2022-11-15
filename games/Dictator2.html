@@ -1,0 +1,60 @@
+{{ block title }}
+    Situation {{ spiel }}: Entscheidung
+{{ endblock }}
+{{ block content }}
+
+    <p>
+        Sie treffen nun die Entscheidung als <b>Spieler A</b>. Sie besitzen {{ C.DICTATOR_ENDOWMENT }} und können diesen Betrag 
+        beliebig zwischen sich selbst und Spieler B aufteilen. Verschieben Sie den Regler um die gewünschte Aufteilung festzulegen.
+    </p>
+
+    <p>
+        <label for="id_dictator_amount_sent">Betrag aufteilen:</label><br>
+        <input type="range" min="0" max="100" step="1" value="100" name="dictator_amount_sent" id="id_dictator_amount_sent">
+    </p>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-50">Betrag für Spieler A (Sie)</th>
+                <th>Betrag für Spieler B</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="w-50"><span id="amount_kept">0</span> Punkte</td>
+                <td><span id="amount_sent">0</span> Punkte</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const slider = document.getElementById('id_dictator_amount_sent');
+        const kept = document.getElementById('amount_kept');
+        const sent = document.getElementById('amount_sent');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        slider.max = endowment;
+        next_button.disabled = true;
+        
+        slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            sent.innerText = this.value;
+            kept.innerText = endowment - this.value;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

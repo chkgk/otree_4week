@@ -1,25 +1,57 @@
 {{ block title }}
-    Spiel {{ player.round_number }}
+    Situation {{ spiel }}: Anleitung
 {{ endblock }}
 {{ block content }}
 
-    <p>
-        Sie besitzen {{ C.TRUST_ENDOWMENT }}, von denen Sie eine beliebige Anzahl an einen zweiten Spieler senden können. 
-        Punkte, die Sie an Spieler 2 senden werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. 
-        Spieler 2 entscheidet dann, wie viele Punkte er Ihnen von diesem Betrag zurücksenden möchte. 
-        Sie erhalten diese Punkte zusätzlich zu den Punkten, die Sie behalten haben.
+    <p class="text-justify">
+        In dieser Entscheidungssituation besitzt Spieler A {{ C.TRUST_ENDOWMENT }}, von denen er eine beliebige Anzahl an Spieler B senden kann. Punkte, die an Spieler B gesendet werden, werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. Spieler B entscheidet danach, wie viele Punkte er von diesem Betrag an Spieler A zurücksenden möchte. Spieler A erhält diese Punkte zusätzlich zu den Punkten, die er anfänglich behalten hat. Verschieben Sie die Regler um sich mit den Auswirkungen der Entscheidung von Spieler A und Spieler B auf die Auszahlungen vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
     </p>
 
-    <p>
-        <label for="id_trust_p1_sent">Betrag senden:</label><br>
-        <input type="range" min="0" max="100" step="1" value="50" name="trust_p1_sent" id="id_trust_p1_sent">
-    </p>
-
-    <p>
-        Sie behalten: <span id="amount_kept">0</span> Punkte<br>
-        Sie senden an den zweiten Spieler: <span id="amount_sent">0</span> Punkte<br>
-        Spieler 2 erhält (Faktor {{ C.TRUST_MULTIPLIER }}): <span id="amount_received">0</span> Punkte<br>
-    </p>
+    <div class="container rounded" style="background-color: #e3e3e3;">
+        <h3>Beispiel</h3>
+        <p>
+            <label for="id_trust_p1_sent"><b>Entscheidung von Spieler A:</b></label><br>
+            <input type="range" min="0" max="100" step="1" value="50" name="trust_p1_sent" id="id_trust_p1_sent">
+        </p>
+        
+        <p>
+            <label for="id_trust_p2_sent"><b>Entscheidung von Spieler B:</b></label><br>
+            <input type="range" min="0" max="100" step="1" value="50" name="trust_p2_sent" id="id_trust_p2_sent">
+        </p>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-33">Spieler A sendet</th>
+                    <th class="w-33">Spieler B erhält</th>
+                    <th class="w-33">Spieler B sendet</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span id="amount_p1_sent">0</span> Punkte</td>
+                    <td><span id="amount_p2_received">0</span> Punkte</td>
+                    <td><span id="amount_p2_sent">0</span> Punkte</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-50">Ergebnis für Spieler A</th>
+                    <th class="w-50">Ergebnis für Spieler B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="w-50"><span id="amount_p1_total">0</span> Punkte</td>
+                    <td class="w-50"><span id="amount_p2_total">0</span> Punkte</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     {{ next_button }}
 
@@ -31,23 +63,49 @@
         let slider_touched = false;
         const endowment = js_vars.endowment;
         const multiplier = js_vars.multiplier;
-        const slider = document.getElementById('id_trust_p1_sent');
-        const sent = document.getElementById('amount_sent');
-        const kept = document.getElementById('amount_kept');
-        const received = document.getElementById('amount_received');
+        const p1_slider = document.getElementById('id_trust_p1_sent');
+        const p2_slider = document.getElementById('id_trust_p2_sent');
+        const p1_sent = document.getElementById('amount_p1_sent');
+        const p2_sent = document.getElementById('amount_p2_sent');
+        const p2_received = document.getElementById('amount_p2_received');
         const next_button = document.querySelector('.otree-btn-next');
         
-        slider.max = endowment;
+        const p1_total = document.getElementById('amount_p1_total');
+        const p2_total = document.getElementById('amount_p2_total');
+        
+        let p1_sent_val = 0;
+        let p2_received_val = 0;
+        let p2_sent_val = 50;
+        let p2_sent_abs = 0;
+        
+        p1_slider.max = endowment;
         next_button.disabled = true;
         
-        slider.addEventListener('input', function () {
+        p1_slider.addEventListener('input', function () {
             if (!slider_touched) {
                 slider_touched = true;
                 next_button.disabled = false;
             }
-            sent.innerText = this.value;
-            kept.innerText = endowment - this.value;
-            received.innerText = this.value * multiplier;
+            p1_sent_val = this.value;
+            p2_received_val = this.value * multiplier;
+            p2_sent_abs = Math.floor(p2_sent_val / 100 * p2_received_val)
+
+            
+            p1_sent.innerText = p1_sent_val;
+            p2_received.innerText = p2_received_val;
+            
+            p2_sent.innerText = p2_sent_abs;
+            p1_total.innerText = js_vars.endowment - p1_sent_val + p2_sent_abs;
+            p2_total.innerText = p2_received_val - p2_sent_abs;
+        });
+        
+        p2_slider.addEventListener('input', function () {
+            p2_sent_val = this.value;
+            p2_sent_abs = Math.floor(p2_sent_val / 100 * p2_received_val)
+            p2_sent.innerText = p2_sent_abs;
+            
+            p1_total.innerText = js_vars.endowment - p1_sent_val + p2_sent_abs;
+            p2_total.innerText = p2_received_val - p2_sent_abs;
         });
     </script>
 {{ endblock }}

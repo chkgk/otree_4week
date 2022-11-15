@@ -1,30 +1,40 @@
 {{ block title }}
-    Spiel {{ player.round_number }}
+    Situation {{ spiel }}: Anleitung
 {{ endblock }}
 {{ block content }}
 
     <p>
-        Sie und ein zweiter Spieler wählen nun jeweils eine Zahl zwischen 0 und {{ C.MINIMUM_MAX_NUMBER }}. 
-        Je höher die Zahlen und je näher die Zahlen aneinander sind, desto höher ist Ihre Auszahlung.
-        Verstellen Sie die Regler um ein Gefühl für die Auswirkungen auf Ihre Auszahlung zu erhalten:
+        In dieser Entscheidungssituation wählen Spieler A und Spieler B jeweils eine Zahl zwischen 0 und {{ C.MINIMUM_MAX_NUMBER }}. Je höher die Zahlen und je näher die Zahlen aneinander sind, desto höher ist Ihre jeweilige Auszahlung.
+        Verschieben Sie den Regler um sich mit den Auswirkungen der Zahlenwahl beider Spieler vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
     </p>
     <div class="container rounded" style="background-color: #e3e3e3;">
         <h3>Beispiel</h3>
         <p>
-            <label for="id_own_number">Ihre Zahl:</label> <span id="own_selected"></span><br>
+            <label for="id_own_number"><b>Spieler A wählt:</b></label> <span id="own_selected"></span><br>
             <input type="range" min="0" max="100" step="1" value="50" name="own_number" id="id_own_number">
         </p>
         <p>
-            <label for="id_other_number">Zahl des anderen Spielers:</label> <span id="other_selected"></span><br>
+            <label for="id_other_number"><b>Spieler B wählt:</b></label> <span id="other_selected"></span><br>
             <input type="range" min="0" max="100" step="1" value="50" name="other_number" id="id_other_number">
         </p>
-        <p>
-            Resultierende Auszahlung: <span id="coordination_outcome">0</span> Punkte<br>
-        </p>
+
+        <table class="table">
+        <thead>
+            <tr>
+                <th class="w-50">Ergebnis für Spieler A</th>
+                <th>Ergebnis für Spieler B</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="w-50"><span id="p1_outcome">0</span> Punkte</td>
+                <td><span id="p2_outcome">0</span> Punkte</td>
+            </tr>
+        </tbody>
+    </table>
+        
     </div>
-    <p>
-        Wenn Sie sich mit der Funktionsweise vertraut gemacht haben, treffen Sie auf der nächsten Seite Ihre Entscheidung.
-    </p>
+
     {{ next_button }}
 
 {{ endblock }}
@@ -39,7 +49,8 @@
         const other = document.getElementById('id_other_number');
         const own_out = document.getElementById('own_selected');
         const other_out = document.getElementById('other_selected');
-        const outcome = document.getElementById('coordination_outcome');
+        const p1_outcome = document.getElementById('p1_outcome');
+        const p2_outcome = document.getElementById('p2_outcome');
         const next_button = document.querySelector('.otree-btn-next');
         
         own.max = max_number;
@@ -47,13 +58,15 @@
         next_button.disabled = true;
         
         function calc_outcome() {
-            let out = 0;
+            let p_large_out = p1 * other.value + p2 * (max_number - own.value);
+            let p_small_out = p1 * own.value + p2 * (max_number - other.value);
             if (parseInt(own.value) >= parseInt(other.value)) {
-                out = p1 * other.value + p2 * (max_number - own.value);
+                p1_outcome.innerText = p_large_out;
+                p2_outcome.innerText = p_large_out;
             } else {
-                out = p1 * own.value + p2 * (max_number - other.value);
+                p1_outcome.innerText = p_small_out;
+                p2_outcome.innerText = p_small_out;
             }
-            outcome.innerText = out;
         }
         
         own.addEventListener('input', function () {

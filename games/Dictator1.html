@@ -1,23 +1,35 @@
 {{ block title }}
-    Spiel {{ player.round_number }}
+    Situation {{ spiel }}: Anleitung
 {{ endblock }}
 {{ block content }}
 
-    <p>
-        Sie besitzen {{ C.DICTATOR_ENDOWMENT }} und können diesen Betrag beliebig zwischen Ihnen und einem zweiten 
-        Spieler aufteilen. Verschieben Sie den Regler um die Auswirkungen auf Ihre Auszahlung und die Auszahlung 
-        des anderen Spielers zu sehen.
+    <p class="text-justify">
+        In dieser Entscheidungssituation besitzt Spieler A {{ C.DICTATOR_ENDOWMENT }} und kann diese beliebig zwischen Spieler A und Spieler B aufteilen und so beide Auszahlungen bestimmen. Spieler B trifft keine Entscheidung. Verschieben Sie den Regler um sich mit den Auswirkungen der Entscheidung von Spieler A auf die Auszahlungen beider Spieler vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
     </p>
 
-    <p>
-        <label for="id_dictator_amount_sent">Betrag aufteilen:</label><br>
-        <input type="range" min="0" max="100" step="1" value="100" name="dictator_amount_sent" id="id_dictator_amount_sent">
-    </p>
-    
-    <p>
-        Ihre Auszahlung: <span id="amount_kept">0</span> Punkte<br>
-        Auszahlung des anderen Spielers: <span id="amount_sent">0</span> Punkte
-    </p>
+    <div class="container rounded" style="background-color: #e3e3e3;">
+        <h3>Beispiel</h3>
+        <p>
+            <label for="id_dictator_amount_sent"><b>Entscheidung von Spieler A:</b></label><br>
+            <input type="range" min="0" max="100" step="1" value="100" name="dictator_amount_sent" id="id_dictator_amount_sent">
+        </p>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-50">Betrag für Spieler A</th>
+                    <th>Betrag für Spieler B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="w-50"><span id="amount_kept">0</span> Punkte</td>
+                    <td><span id="amount_sent">0</span> Punkte</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     {{ next_button }}
 
 {{ endblock }}

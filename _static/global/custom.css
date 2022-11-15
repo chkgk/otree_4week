@@ -12,3 +12,7 @@ input[type='range'] {
 p:has(.otree-btn-next) {
     text-align: center;
 }
+
+.w-33 {
+    width: 33%!important;
+}
