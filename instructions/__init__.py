@@ -35,13 +35,32 @@ class Consent(Page):
     form_model = 'player'
     form_fields = ['gave_consent']
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.session.config.get('week', 1) == 1
+
 
 class GeneralInstructions(Page):
     form_model = 'player'
     form_fields = ['accepts_payment_rule']
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.session.config.get('week', 1) == 1
+
+
+class InstructionReminder(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.session.config.get('week', 1) != 1
+
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(week=player.session.config.get('week', 1))
+
 
 page_sequence = [
     Consent,
-    GeneralInstructions
+    GeneralInstructions,
+    InstructionReminder
 ]

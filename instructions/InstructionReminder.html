@@ -1,0 +1,32 @@
+{{ block title }}
+    Anleitung
+{{ endblock }}
+{{ block content }}
+
+    <p>Willkommen zum {{ week }}. Termin unseres Online-Experiments!</p>
+
+    <p>
+        Sie werden erneut vier Entscheidungssituationen durchlaufen.<br> 
+        Die Teilnahme dauert maximal 10 Minuten.
+    </p>
+
+    <p>
+      <a class="btn btn-outline-secondary" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        Allgemeine Anleitung erneut anzeigen
+      </a>
+    </p>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        {{ include "instructions/general_instructions.html" }}
+      </div>
+    </div>
+
+
+    
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

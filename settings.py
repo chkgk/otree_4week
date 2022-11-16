@@ -7,26 +7,46 @@ SESSION_CONFIGS = [
         num_demo_participants=4,
     ),
     dict(
-        name='games',
-        app_sequence=['games'],
-        num_demo_participants=4,
-    ),
-    dict(
-        name='questionnaires',
+        name='questionnaires_week1',
         app_sequence=['questionnaires'],
         num_demo_participants=4,
+        week=1
+    ),
+    dict(
+        name='questionnaires_week4',
+        app_sequence=['questionnaires'],
+        num_demo_participants=4,
+        week=4
+    ),
+    dict(
+        name='Week1games_only',
+        app_sequence=['games'], 
+        num_demo_participants=4,
+        week=1
     ),
     dict(
         name='Week1',
-        app_sequence=['games'],  # update to include instructions
+        app_sequence=['instructions', 'games', 'questionnaires'],
         num_demo_participants=4,
         week=1
     ),
     dict(
         name='Week2',
-        app_sequence=['games'],
+        app_sequence=['instructions', 'games', 'questionnaires'],
         num_demo_participants=4,
         week=2
+    ),
+    dict(
+        name='Week3',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=3
+    ),
+    dict(
+        name='Week4',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=4
     )
 ]
 

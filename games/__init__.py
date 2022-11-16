@@ -14,7 +14,7 @@ class C(BaseConstants):
     GAMES = ['dictator', 'trust_game', 'public_good', 'minimum_effort']
     NUM_ROUNDS = len(GAMES)
 
-    SPLASH_SECONDS = 3
+    SPLASH_SECONDS = 5
     SPLASH_TEMPLATE = 'games/Splashscreen.html'
 
     DICTATOR_ENDOWMENT = cu(200)
@@ -133,6 +133,19 @@ def _get_partner(subsession, partner_id, game):
         if p.id_in_subsession == partner_id:
             partner = p.in_round(p.participant.task_rounds.get(game, 1))
     return partner
+
+
+def calculate_payoffs(player: Player):
+    player.participant.finished = True
+
+    calculate_dictator_payoff(player)
+    calculate_trust_payoff(player)
+    calculate_public_payoff(player)
+    calculate_minimum_payoff(player)
+
+    # run determine week payoffs for everyone
+    for p in player.subsession.get_players():
+        determine_week_payoff(p)
 
 
 def calculate_dictator_payoff(player: Player):
@@ -323,6 +336,11 @@ class Dictator2(Page):
             endowment=C.DICTATOR_ENDOWMENT
         )
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.round_number == 4:
+            calculate_payoffs(player)
+
 
 class TrustIntro(Page):
     @staticmethod
@@ -373,6 +391,11 @@ class TrustP1(Page):
             multiplier=C.TRUST_MULTIPLIER
         )
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.round_number == 4:
+            calculate_payoffs(player)
+
 
 class TrustP2(Page):
     form_model = 'player'
@@ -403,6 +426,11 @@ class TrustP2(Page):
             endowment=C.TRUST_ENDOWMENT,
             multiplier=C.TRUST_MULTIPLIER
         )
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.round_number == 4:
+            calculate_payoffs(player)
 
 
 class PublicIntro(Page):
@@ -462,6 +490,11 @@ class Public2(Page):
             spiel='P'
         )
 
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        if player.round_number == 4:
+            calculate_payoffs(player)
+
 
 class MinimumIntro(Page):
     timeout_seconds = C.SPLASH_SECONDS
@@ -514,40 +547,24 @@ class Minimum2(Page):
             p2=C.MINIMUM_P2
         )
 
-
-class PayoffCalculations(Page):
-    @staticmethod
-    def is_displayed(player: Player):
-        return player.round_number == 4
-
     @staticmethod
     def before_next_page(player: Player, timeout_happened):
-        player.participant.finished = True
-
-        calculate_dictator_payoff(player)
-        calculate_trust_payoff(player)
-        calculate_public_payoff(player)
-        calculate_minimum_payoff(player)
-
-        # run determine week payoffs for everyone
-        for p in player.subsession.get_players():
-            determine_week_payoff(p)
+        if player.round_number == 4:
+            calculate_payoffs(player)
 
 
 page_sequence = [
-    # DictatorIntro,
-    # DictatorInstructions,
+    DictatorIntro,
     Dictator1,
     Dictator2,
-    # TrustIntro,
+    TrustIntro,
     Trust1,
     TrustP1,
     TrustP2,
-    # PublicIntro,
+    PublicIntro,
     Public1,
     Public2,
-    # MinimumIntro,
+    MinimumIntro,
     Minimum1,
-    Minimum2,
-    PayoffCalculations
+    Minimum2
 ]

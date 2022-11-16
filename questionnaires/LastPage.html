@@ -1,0 +1,20 @@
+{{ block title }}
+    Ende
+{{ endblock }}
+{{ block content }}
+
+    <p>Vielen Dank für Ihre Teilnahme.</p>
+
+    <p>
+    {{ if week < 4 }}
+        Am nächsten Dienstag erhalten Sie den nächsten Teilnahmelink.
+    {{ else}}
+        In ungefähr einer Woche erhalten Sie eine E-Mail mit Informationen zur Auszahlung.
+    {{ endif }}
+    </p>
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

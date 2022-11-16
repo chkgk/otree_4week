@@ -2,7 +2,7 @@ from otree.api import *
 
 
 doc = """
-Your app description
+Questionnaire part for pre-test
 """
 
 
@@ -47,6 +47,19 @@ class Demographics(Page):
     form_model = 'player'
     form_fields = ['age', 'gender', 'economics', 'game_theory', 'risk_attitude']
 
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.session.config.get('week', 1) == 1
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        set_indicators(player)
 
 
-page_sequence = [Demographics]
+class LastPage(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        return dict(week=player.session.config.get('week', 1))
+
+
+page_sequence = [Demographics, LastPage]
