@@ -506,7 +506,7 @@ class MinimumIntro(Page):
 
     @staticmethod
     def vars_for_template(player: Player):
-        return dict(spiel='P')
+        return dict(spiel='M')
 
 
 class Minimum1(Page):
