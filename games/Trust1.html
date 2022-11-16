@@ -4,7 +4,7 @@
 {{ block content }}
 
     <p class="text-justify">
-        In dieser Entscheidungssituation besitzt Spieler A {{ C.TRUST_ENDOWMENT }}, von denen er eine beliebige Anzahl an Spieler B senden kann. Punkte, die an Spieler B gesendet werden, werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. Spieler B entscheidet danach, wie viele Punkte er von diesem Betrag an Spieler A zurücksenden möchte. Spieler A erhält diese Punkte zusätzlich zu den Punkten, die er anfänglich behalten hat. Verschieben Sie die Regler um sich mit den Auswirkungen der Entscheidung von Spieler A und Spieler B auf die Auszahlungen vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
+        In dieser Entscheidungssituation besitzen beide Spieler jeweils {{ C.TRUST_ENDOWMENT }}. Spieler A kann von seinen {{ C.TRUST_ENDOWMENT }} eine beliebige Anzahl an Spieler B senden. Punkte, die an Spieler B gesendet werden, werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. Spieler B entscheidet danach, wie viele Punkte er von diesem Betrag an Spieler A zurücksenden möchte. Spieler A erhält diese Punkte zusätzlich zu den Punkten, die er anfänglich behalten hat. Verschieben Sie die Regler um sich mit den Auswirkungen der Entscheidung von Spieler A und Spieler B auf die Auszahlungen vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
     </p>
 
     <div class="container rounded" style="background-color: #e3e3e3;">
@@ -96,7 +96,7 @@
             
             p2_sent.innerText = p2_sent_abs;
             p1_total.innerText = js_vars.endowment - p1_sent_val + p2_sent_abs;
-            p2_total.innerText = p2_received_val - p2_sent_abs;
+            p2_total.innerText = js_vars.endowment + p2_received_val - p2_sent_abs;
         });
         
         p2_slider.addEventListener('input', function () {
@@ -105,7 +105,7 @@
             p2_sent.innerText = p2_sent_abs;
             
             p1_total.innerText = js_vars.endowment - p1_sent_val + p2_sent_abs;
-            p2_total.innerText = p2_received_val - p2_sent_abs;
+            p2_total.innerText = js_vars.endowment + p2_received_val - p2_sent_abs;
         });
     </script>
 {{ endblock }}
