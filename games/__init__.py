@@ -14,7 +14,7 @@ class C(BaseConstants):
     GAMES = ['dictator', 'trust_game', 'public_good', 'minimum_effort']
     NUM_ROUNDS = len(GAMES)
 
-    SPLASH_SECONDS = 5
+    SPLASH_SECONDS = 3
     SPLASH_TEMPLATE = 'games/Splashscreen.html'
 
     DICTATOR_ENDOWMENT = cu(200)
