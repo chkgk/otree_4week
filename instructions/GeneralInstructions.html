@@ -3,7 +3,15 @@
 {{ endblock }}
 {{ block content }}
 
-    {{ include "instructions/general_instructions.html" }}
+    <p class="text-justify">
+        Jede Session besteht aus insgesamt vier Entscheidungssituationen, die Ihnen nacheinander präsentiert werden. Sie erhalten dazu jeweils auf einer Seite die Anleitung zur jeweiligen Situation und können sich mit der Berechnung Ihrer Auszahlung vertraut machen. Auf der Folgeseite treffen Sie dann jeweils Ihre Entscheidung. Ihre Entscheidungen wirken sich dabei jeweils auf Ihre eigene Auszahlung und die Auszahlung eines zweiten, zufällig ausgewählten Teilnehmenden aus. Wir nennen die beiden Teilnehmer in einer Entscheidungssituation Spieler A und Spieler B. Welche Rolle ihre Auszahlung bestimmt, entscheidet der Zufall. Über die vier Termine hinweg treffen Sie insgesamt 16 Entscheidungen. Sie erhalten zwischen den Entscheidungssituationen keine Rückmeldung über die Ergebnisse.
+    </p>
+    <p class="text-justify">
+        <b>Ihre Auszahlung besteht in jedem Fall aus einer sicheren Zahlung von 4 EUR. Zusätzlich erhalten Sie eine Auszahlung für eine vom Computer zufällig ausgewählte Entscheidungssituation aus allen 16 Entscheidungen.</b> Somit kann jede Ihrer Entscheidungen auszahlungsrelevant sein. Je nach Entscheidungssituation entscheidet ein weiterer Zufallszug darüber, welche Rolle (Spieler A oder B) Ihnen in der ausgewählten Situation zuteil wird. Ihre zusätzliche Auszahlung ergibt sich dann aus den Entscheidungen, die Sie und der/die zweite Teilnehmende getroffen haben. Sämtliche Beträge in dieser Studie sind in Punkten angegeben. <b>Die Punkte werden zur Auszahlung zu einem Wechselkurs von 10 Punkte = 1 EUR umgerechnet.</b>
+    </p>
+    <p class="text-justify">
+        Ungefähr eine Woche nach Ende der letzten Session erhalten Sie eine E-Mail mit Informationen zur Auszahlung. Sie erfahren dann, welche Entscheidungssituation zufällig ausgewählt wurde (und ggf. welche Rolle Ihnen zugelost wurde), welche Entscheidungen getroffen wurden und welcher Auszahlungsbetrag sich für Sie daraus ergibt. Sie erhalten dann eine Überweisung auf das Konto, dessen IBAN Sie angegeben haben.
+    </p>
 
     {{ formfields }}<br>
     {{ next_button }}
@@ -11,5 +19,5 @@
 {{ endblock }}
 
 {{ block styles }}
-    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
 {{ endblock }}
