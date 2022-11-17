@@ -24,7 +24,7 @@ class Player(BasePlayer):
     age = models.IntegerField(min=0, max=120, label="Wie alt sind Sie (Jahre)?")
     gender = models.StringField(choices=['weiblich', 'männlich', 'anderes', 'keine Angabe'], label="Was ist Ihr Geschlecht?", widget=widgets.RadioSelect)
     economics = models.BooleanField(choices=[(True, 'Ja'), (False, 'Nein')], label="Studieren Sie Betriebswirtschaftslehre oder Volkswirtschaftslehre?")
-    game_theory = models.BooleanField(choices=[(True, 'Ja'), (False, 'Nein')], label="Haben Sie schon einmal eine Spieltheorievorlesung gehört?")
+    game_theory = models.BooleanField(choices=[(True, 'Ja'), (False, 'Nein')], label="Haben Sie an einem Kurs teilgenommen, der Spieltheorie zum Thema hatte?")
     risk_attitude = models.IntegerField(choices=list(range(0, 11)), label="Wie schätzen Sie sich persönlich ein: Sind Sie im Allgemeinen ein risikobereiter Mensch oder versuchen Sie, Risiken zu vermeiden? (0 = gar nicht risikobereit / 10 = sehr risikobereit)", widget=widgets.RadioSelectHorizontal)
 
     iban = models.StringField(required=True, label="IBAN:")
