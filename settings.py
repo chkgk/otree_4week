@@ -110,9 +110,15 @@ SECRET_KEY = '6185353070723'
 
 ROOMS = [
     dict(
-        name='econ101',
-        display_name='Econ 101 class',
-        participant_label_file='_rooms/econ101.txt',
+        name='4week',
+        display_name='Main Experiment Room',
+        participant_label_file='_rooms/4week.txt',
+        use_secure_urls=True
+    ),
+    dict(
+        name='4week_demo',
+        display_name='DEMO Room',
+        participant_label_file='_rooms/4week_demo.txt',
         use_secure_urls=True
     ),
 ]
