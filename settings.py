@@ -5,6 +5,7 @@ SESSION_CONFIGS = [
         name='instructions',
         app_sequence=['instructions'],
         num_demo_participants=4,
+        week=1
     ),
     dict(
         name='questionnaires_week1',

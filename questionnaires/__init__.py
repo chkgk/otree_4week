@@ -27,6 +27,9 @@ class Player(BasePlayer):
     game_theory = models.BooleanField(choices=[(True, 'Ja'), (False, 'Nein')], label="Haben Sie schon einmal eine Spieltheorievorlesung gehört?")
     risk_attitude = models.IntegerField(choices=list(range(0, 11)), label="Wie schätzen Sie sich persönlich ein: Sind Sie im Allgemeinen ein risikobereiter Mensch oder versuchen Sie, Risiken zu vermeiden? (0 = gar nicht risikobereit / 10 = sehr risikobereit)", widget=widgets.RadioSelectHorizontal)
 
+    iban = models.StringField(required=True, label="IBAN:")
+    iban_wdh = models.StringField(required=True, label="IBAN (wiederholen):")
+
     # indicators
     female = models.BooleanField()
     male = models.BooleanField()
@@ -56,10 +59,24 @@ class Demographics(Page):
         set_indicators(player)
 
 
+class Payments(Page):
+    form_model = 'player'
+    form_fields = ['iban', 'iban_wdh']
+
+    @staticmethod
+    def error_message(player, values):
+        if values['iban'] != values['iban_wdh']:
+            return 'Die IBANs stimmen nicht überein.'
+
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.session.config.get('week', 1) == 1
+
+
 class LastPage(Page):
     @staticmethod
     def vars_for_template(player: Player):
         return dict(week=player.session.config.get('week', 1))
 
 
-page_sequence = [Demographics, LastPage]
+page_sequence = [Demographics, Payments, LastPage]

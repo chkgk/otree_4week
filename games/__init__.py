@@ -191,8 +191,6 @@ def calculate_trust_payoff(player: Player):
 
 
 def _trust_game_payoff(p1, p2):
-    # check payoffs carefully, it was late.
-
     p1_sends = p1.trust_p1_sent
     p2_receives = p1_sends * C.TRUST_MULTIPLIER
 
@@ -220,7 +218,7 @@ def _trust_game_payoff(p1, p2):
         p2_sends_back = 0
 
     p1_payoff = C.TRUST_ENDOWMENT - p1_sends + math.floor(p2_sends_back/100 * p1_sends)
-    p2_payoff = p2_receives - math.floor(p2_sends_back/100 * p1_sends)
+    p2_payoff = C.TRUST_ENDOWMENT + p2_receives - math.floor(p2_sends_back/100 * p1_sends)
 
     return p1_payoff, p2_payoff
 
