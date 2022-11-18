@@ -159,7 +159,7 @@ def calculate_dictator_payoff(player: Player):
         part.dictator_payoff_set = True
 
         partner = _get_partner(player.subsession, part.partner_id_this_week, 'dictator')
-
+        print(player.id_in_subsession, partner)
         partner.participant.dictator_payoff = player.in_round(dictator_round).dictator_amount_sent
         partner.participant.dictator_payoff_set = True
 
@@ -217,8 +217,8 @@ def _trust_game_payoff(p1, p2):
     else:
         p2_sends_back = 0
 
-    p1_payoff = C.TRUST_ENDOWMENT - p1_sends + math.floor(p2_sends_back/100 * p1_sends)
-    p2_payoff = C.TRUST_ENDOWMENT + p2_receives - math.floor(p2_sends_back/100 * p1_sends)
+    p1_payoff = C.TRUST_ENDOWMENT - p1_sends + math.floor(p2_sends_back/100 * p2_receives)
+    p2_payoff = C.TRUST_ENDOWMENT + p2_receives - math.floor(p2_sends_back/100 * p2_receives)
 
     return p1_payoff, p2_payoff
 
@@ -226,7 +226,7 @@ def _trust_game_payoff(p1, p2):
 def calculate_public_payoff(player: Player):
     part = player.participant
 
-    if part.trust_payoff_set:
+    if part.public_payoff_set:
         return
 
     myself = player.in_round(part.task_rounds['public_good'])
@@ -237,8 +237,8 @@ def calculate_public_payoff(player: Player):
 
     public_good_pot = myself.public_contribution + other.public_contribution
 
-    part.public_payoff = C.PUBLIC_ENDOWMMENT - myself.public_contribution + C.PUBLIC_MPCR * public_good_pot
-    other.participant.public_payoff = C.PUBLIC_ENDOWMMENT - other.public_contribution + C.PUBLIC_MPCR * public_good_pot
+    part.public_payoff = C.PUBLIC_ENDOWMENT - myself.public_contribution + C.PUBLIC_MPCR * public_good_pot
+    other.participant.public_payoff = C.PUBLIC_ENDOWMENT - other.public_contribution + C.PUBLIC_MPCR * public_good_pot
 
     part.public_payoff_set = True
     other.participant.public_payoff_set = True

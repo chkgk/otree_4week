@@ -2,10 +2,16 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        name='instructions',
+        name='instructions_week1',
         app_sequence=['instructions'],
         num_demo_participants=4,
         week=1
+    ),
+    dict(
+        name='instructions_week2',
+        app_sequence=['instructions'],
+        num_demo_participants=4,
+        week=2
     ),
     dict(
         name='questionnaires_week1',
@@ -20,8 +26,8 @@ SESSION_CONFIGS = [
         week=4
     ),
     dict(
-        name='Week1games_only',
-        app_sequence=['games'], 
+        name='games_week1',
+        app_sequence=['games'],
         num_demo_participants=4,
         week=1
     ),
