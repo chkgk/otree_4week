@@ -2,6 +2,30 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
+        name='Week1',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=1
+    ),
+    dict(
+        name='Week2',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=2
+    ),
+    dict(
+        name='Week3',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=3
+    ),
+    dict(
+        name='Week4',
+        app_sequence=['instructions', 'games', 'questionnaires'],
+        num_demo_participants=4,
+        week=4
+    ),
+    dict(
         name='instructions_week1',
         app_sequence=['instructions'],
         num_demo_participants=4,
@@ -30,30 +54,6 @@ SESSION_CONFIGS = [
         app_sequence=['games'],
         num_demo_participants=4,
         week=1
-    ),
-    dict(
-        name='Week1',
-        app_sequence=['instructions', 'games', 'questionnaires'],
-        num_demo_participants=4,
-        week=1
-    ),
-    dict(
-        name='Week2',
-        app_sequence=['instructions', 'games', 'questionnaires'],
-        num_demo_participants=4,
-        week=2
-    ),
-    dict(
-        name='Week3',
-        app_sequence=['instructions', 'games', 'questionnaires'],
-        num_demo_participants=4,
-        week=3
-    ),
-    dict(
-        name='Week4',
-        app_sequence=['instructions', 'games', 'questionnaires'],
-        num_demo_participants=4,
-        week=4
     )
 ]
 
