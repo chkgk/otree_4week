@@ -94,7 +94,14 @@ PARTICIPANT_FIELDS = [
     'public_payoff_set',
     'public_payoff',
     'week_payoff_set',
-    'week_payoff'
+    'week_payoff',
+    'pay_week',
+    'final_payoff',
+    'is_finished',
+    'dictator_decision',
+    'trust_decision',
+    'public_decision',
+    'minimum_decision'
 ]
 SESSION_FIELDS = []
 
@@ -128,3 +135,5 @@ ROOMS = [
         use_secure_urls=True
     ),
 ]
+
+DEBUG=False

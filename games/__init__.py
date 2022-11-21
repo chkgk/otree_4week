@@ -74,6 +74,7 @@ class ParticipantConfig(ExtraModel):
     partner_id_2 = models.IntegerField()
     partner_id_3 = models.IntegerField()
     partner_id_4 = models.IntegerField()
+    pay_week = models.IntegerField()
 
 
 # FUNCTIONS
@@ -101,9 +102,10 @@ def creating_session(subsession: Subsession):
             part.trust_payoff_set = False
             part.public_payoff_set = False
             part.minimum_payoff_set = False
-            part.finished = False
+            part.is_finished = False
             part.week_payoff_set = False
             part.pay_game = random.choice(['dictator', 'trust', 'public', 'minimum'])
+            part.final_payoff = 0.0
 
             for row in participant_config:
                 if row['id_in_subsession'] == p.id_in_subsession:  # refine to code / participant_label?
@@ -120,6 +122,7 @@ def creating_session(subsession: Subsession):
                     part.partner_id_2 = row['partner_id_2']
                     part.partner_id_3 = row['partner_id_3']
                     part.partner_id_4 = row['partner_id_4']
+                    part.pay_week = row['pay_week']
 
                     if 'week' in subsession.session.config:
                         part.dictator_this_week = row[f"dictator_{subsession.session.config['week']}"]
@@ -136,7 +139,7 @@ def _get_partner(subsession, partner_id, game):
 
 
 def calculate_payoffs(player: Player):
-    player.participant.finished = True
+    player.participant.is_finished = True
 
     calculate_dictator_payoff(player)
     calculate_trust_payoff(player)
@@ -155,11 +158,12 @@ def calculate_dictator_payoff(player: Player):
 
     if part.dictator_this_week:
         dictator_round = part.task_rounds['dictator']
+        part.dictator_decision = player.in_round(dictator_round).dictator_amount_sent
         part.dictator_payoff = C.DICTATOR_ENDOWMENT - player.in_round(dictator_round).dictator_amount_sent
         part.dictator_payoff_set = True
 
         partner = _get_partner(player.subsession, part.partner_id_this_week, 'dictator')
-        print(player.id_in_subsession, partner)
+        # print(player.id_in_subsession, partner)
         partner.participant.dictator_payoff = player.in_round(dictator_round).dictator_amount_sent
         partner.participant.dictator_payoff_set = True
 
@@ -173,7 +177,7 @@ def calculate_trust_payoff(player: Player):
     myself = player.in_round(part.task_rounds['trust_game'])
     other = _get_partner(player.subsession, part.partner_id_this_week, 'trust_game')
 
-    if not all([myself.participant.finished, other.participant.finished]):
+    if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
 
     if part.trust_sender_this_week:
@@ -181,7 +185,10 @@ def calculate_trust_payoff(player: Player):
     else:
         p1, p2 = other, myself
 
-    p1_payoff, p2_payoff = _trust_game_payoff(p1, p2)
+    p1_decision, p1_payoff, p2_decision, p2_payoff = _trust_game_payoff(p1, p2)
+
+    p1.participant.trust_decision = p1_decision
+    p2.participant.trust_decision = p2_decision
 
     p1.participant.trust_payoff = p1_payoff
     p2.participant.trust_payoff = p2_payoff
@@ -220,7 +227,7 @@ def _trust_game_payoff(p1, p2):
     p1_payoff = C.TRUST_ENDOWMENT - p1_sends + math.floor(p2_sends_back/100 * p2_receives)
     p2_payoff = C.TRUST_ENDOWMENT + p2_receives - math.floor(p2_sends_back/100 * p2_receives)
 
-    return p1_payoff, p2_payoff
+    return p1_sends, p1_payoff, p2_sends_back, p2_payoff
 
 
 def calculate_public_payoff(player: Player):
@@ -232,10 +239,13 @@ def calculate_public_payoff(player: Player):
     myself = player.in_round(part.task_rounds['public_good'])
     other = _get_partner(player.subsession, part.partner_id_this_week, 'public_good')
 
-    if not all([myself.participant.finished, other.participant.finished]):
+    if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
 
     public_good_pot = myself.public_contribution + other.public_contribution
+
+    part.public_decision = myself.public_contribution
+    other.participant.public_decision = other.public_contribution
 
     part.public_payoff = C.PUBLIC_ENDOWMENT - myself.public_contribution + C.PUBLIC_MPCR * public_good_pot
     other.participant.public_payoff = C.PUBLIC_ENDOWMENT - other.public_contribution + C.PUBLIC_MPCR * public_good_pot
@@ -253,7 +263,7 @@ def calculate_minimum_payoff(player: Player):
     myself = player.in_round(part.task_rounds['minimum_effort'])
     other = _get_partner(player.subsession, part.partner_id_this_week, 'minimum_effort')
 
-    if not all([myself.participant.finished, other.participant.finished]):
+    if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
 
     my_number = myself.minimum_number_selected
@@ -265,6 +275,9 @@ def calculate_minimum_payoff(player: Player):
     else:
         my_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
         others_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
+
+    part.minimum_decision = my_number
+    other.participant.minimum_decision = others_number
 
     part.minimum_payoff = my_payoff
     other.participant.minimum_payoff = others_payoff
@@ -284,6 +297,10 @@ def determine_week_payoff(player: Player):
     player.payoff = part.vars.get(f"{part.pay_game}_payoff", 0)
     part.week_payoff = player.payoff
     part.week_payoff_set = True
+
+    if part.pay_week == player.subsession.session.config.get('week', 1):
+        part.final_payoff = cu(part.week_payoff).to_real_world_currency(player.session) + player.session.config.get('participation_fee', 0.0)
+        part.finished = 1
 
 
 # PAGES
