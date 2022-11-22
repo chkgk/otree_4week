@@ -135,5 +135,3 @@ ROOMS = [
         use_secure_urls=True
     ),
 ]
-
-DEBUG=False
