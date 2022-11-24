@@ -61,7 +61,6 @@ def extract_report_data(data_by_participant, label):
     game_to_pay = own_week_data['participant.pay_game']
     final_payoff = own_week_data['participant.final_payoff']
 
-
     if game_to_pay == 'dictator':
         game_info.append("Ein weiterer Zufallszug hat Entscheidungssituation D zur Auszahlung bestimmt.")
         if own_week_data["participant.dictator_this_week"] == '1':
@@ -131,7 +130,7 @@ def get_recipient_data(filename):
     return xls.parse(xls.sheet_names[0])
 
 
-def prepare_emails(label, text, subject, recipient):
+def save_email_messages(label, text, subject, recipient):
     outlook = win32.Dispatch('outlook.application')
     mail = outlook.CreateItem(0)
     mail.To = recipient
@@ -140,43 +139,37 @@ def prepare_emails(label, text, subject, recipient):
     mail.SaveAs(Path=f'C:\Output\{label}.msg')
 
 
-def main():
-    data_by_week = read_data_from_files()
-    data_by_participant = aggregate_data_by_participant(data_by_week)
-
-    recipients_df = get_recipient_data('data/Recipients.xlsx')
-    df = recipients_df.loc[:49]  # get 50 first entries
-    rec = df.loc[df['label'] == 'mbxuey']
-
-    email_text_intro = """
-Vielen Dank, dass Sie an unserer Online-Studie teilgenommen haben. Unten sehen Sie Ihre Ergebnisse.
-"""
-
-    email_text_end = """
-Wir werden Ihnen Ihre Auszahlung in den nächsten Tagen überweisen.
-
-Sollten Sie Fragen haben, wenden Sie sich bitte per E-Mail an mich: christian.koenig@uibk.ac.at
-
-Mit besten Grüßen
-Christian König
-"""
+def build_and_save_emails(data_by_participant, recipients, template_file="templates/report_template.txt"):
+    with open(template_file, 'r', encoding='utf-8') as f:
+        template = f.read()
 
     for label, data in data_by_participant.items():
         game_info = extract_report_data(data_by_participant, label)
-        rec = df.loc[df['label'] == label]
+        rec = recipients.loc[recipients['label'] == label]
         first = rec['Firstname'].item()
         last = rec['Lastname'].item()
         email = rec['Email'].item()
+        report = "\n".join(game_info)
 
-        email_body = f"Hallo {first} {last}!\n"
-        email_body += email_text_intro+"\n"
-        email_body += "\n".join(game_info)
-        email_body += "\n" + email_text_end
+        email_body = template
+        email_body = email_body.replace("{{ firstname }}", first)
+        email_body = email_body.replace("{{ lastname }}", last)
+        email_body = email_body.replace("{{ game_report }}",report)
 
-        prepare_emails(label, email_body, 'Online-Experiment: Ihre Auszahlungsübersicht', email)
+        save_email_messages(label, email_body, 'Online-Experiment: Ihre Auszahlungsübersicht', email)
 
-        # with open(f'output/{label}.txt', 'w', encoding='utf-8') as f:
-        #     f.write(email_body)
+
+def main():
+    # data from experiments
+    data_by_week = read_data_from_files()
+    data_by_participant = aggregate_data_by_participant(data_by_week)
+
+    # recipients from hroot
+    all_recipients = get_recipient_data('data/Recipients.xlsx')
+    df = all_recipients.loc[:49]  # get 50 first entries, because other entries are duplicates (secondary emails)
+
+    # email preparation
+    build_and_save_emails(data_by_participant, df)
 
 
 if __name__ == '__main__':

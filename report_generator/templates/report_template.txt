@@ -1,0 +1,13 @@
+Hallo {{ firstname }} {{ lastname }}!
+
+Vielen Dank, dass Sie an unserer Online-Studie teilgenommen haben. Unten sehen Sie Ihre Ergebnisse.
+
+{{ game_report }}
+
+Wir werden Ihnen Ihre Auszahlung in den nächsten Tagen auf das von Ihnen angegebene Konto überweisen.
+
+Sollten Sie Fragen haben, wenden Sie sich bitte per E-Mail an mich: christian.koenig@uibk.ac.at
+
+
+Mit besten Grüßen
+Christian König
