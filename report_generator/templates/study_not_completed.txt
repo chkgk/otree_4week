@@ -1,0 +1,10 @@
+Hallo {{ firstname }} {{ lastname }}!
+
+Leider mussten wir feststellen, dass Sie nicht an allen vier Terminen unserer Online-Studie teilgenommen haben. 
+Wie in der Einladungsemail vom 22.11.222 und der Anleitung angekündigt, erhalten Sie daher auch keine Vergütung.
+
+Sollten Sie Fragen haben, wenden Sie sich bitte per E-Mail an mich: christian.koenig@uibk.ac.at
+
+
+Mit besten Grüßen
+Christian König

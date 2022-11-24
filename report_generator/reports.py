@@ -50,6 +50,8 @@ def aggregate_data_by_participant(data_by_week):
     return data_by_participant
 
 
+# This function assumes that everyone participated in all four weeks and there are no missing values
+# I need a fallback option in case there is no partner's data for that week.
 def extract_report_data(data_by_participant, label):
     game_info = []
     data = data_by_participant[label]
@@ -139,30 +141,50 @@ def save_email_messages(label, text, subject, recipient):
     mail.SaveAs(Path=f'C:\Output\{label}.msg')
 
 
-def build_and_save_emails(data_by_participant, recipients, template_file="templates/report_template.txt"):
-    with open(template_file, 'r', encoding='utf-8') as f:
-        template = f.read()
+def extract_contact_details(recipients, label):
+    rec = recipients.loc[recipients['label'] == label]
+    first = rec['Firstname'].item()
+    last = rec['Lastname'].item()
+    email = rec['Email'].item()
+    return first, last, email
+
+
+def build_and_save_emails(data_by_participant, recipients, success_template_file="templates/study_completed.txt", not_finished_template_file="templates/study_not_completed.txt"):
+    with open(success_template_file, 'r', encoding='utf-8') as f:
+        success_template = f.read()
+
+    with open(not_finished_template_file, 'r', encoding='utf-8') as f:
+        not_finished_template = f.read()
 
     for label, data in data_by_participant.items():
-        game_info = extract_report_data(data_by_participant, label)
-        rec = recipients.loc[recipients['label'] == label]
-        first = rec['Firstname'].item()
-        last = rec['Lastname'].item()
-        email = rec['Email'].item()
-        report = "\n".join(game_info)
+        first, last, email = extract_contact_details(recipients, label)
+        if data['self']['study_completed']:
+            game_info = extract_report_data(data_by_participant, label)
+            report = "\n".join(game_info)
+    
+            email_body = success_template
+            email_body = email_body.replace("{{ firstname }}", first)
+            email_body = email_body.replace("{{ lastname }}", last)
+            email_body = email_body.replace("{{ game_report }}",report)
+    
+            save_email_messages(label, email_body, 'Online-Experiment: Ihre Auszahlungsübersicht', email)
+        else:
+            email_body = not_finished_template
+            email_body = email_body.replace("{{ firstname }}", first)
+            email_body = email_body.replace("{{ lastname }}", last)
 
-        email_body = template
-        email_body = email_body.replace("{{ firstname }}", first)
-        email_body = email_body.replace("{{ lastname }}", last)
-        email_body = email_body.replace("{{ game_report }}",report)
-
-        save_email_messages(label, email_body, 'Online-Experiment: Ihre Auszahlungsübersicht', email)
+            save_email_messages(label, email_body, 'Informationen zu Ihrer Teilnahme an unserem Online-Experiment', email)
 
 
 def main():
     # data from experiments
     data_by_week = read_data_from_files()
     data_by_participant = aggregate_data_by_participant(data_by_week)
+
+    for label in data_by_participant.keys():
+        # check if they completed all weeks
+        weekly_payoffs_set = [data_by_participant[label]['self'][f'week{i}']['participant.week_payoff_set'] for i in range(1, 5)]
+        data_by_participant[label]['self']['study_completed'] = all(weekly_payoffs_set)
 
     # recipients from hroot
     all_recipients = get_recipient_data('data/Recipients.xlsx')
