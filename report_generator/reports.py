@@ -2,6 +2,24 @@ import csv
 from pandas import ExcelFile
 import win32com.client as win32
 
+from payments import *
+
+EXCLUDES = [
+    'participant._is_bot',
+    'participant._index_in_pages',
+    'participant._max_page_index',
+    'participant._current_app_name',
+    'participant._current_page_name',
+    'participant.time_started_utc',
+    'participant.mturk_worker_id',
+    'participant.mturk_assignment_id',
+    'session.mturk_HITId',
+    'session.mturk_HITGroupId',
+    'session.comment',
+    'session.is_demo',
+    'session.config.name'
+]
+
 
 def read_data_from_files():
     data = dict(week1=[], week2=[], week3=[], week4=[])
@@ -161,12 +179,12 @@ def build_and_save_emails(data_by_participant, recipients, success_template_file
         if data['self']['study_completed']:
             game_info = extract_report_data(data_by_participant, label)
             report = "\n".join(game_info)
-    
+
             email_body = success_template
             email_body = email_body.replace("{{ firstname }}", first)
             email_body = email_body.replace("{{ lastname }}", last)
-            email_body = email_body.replace("{{ game_report }}",report)
-    
+            email_body = email_body.replace("{{ game_report }}", report)
+
             save_email_messages(label, email_body, 'Online-Experiment: Ihre Auszahlungsübersicht', email)
         else:
             email_body = not_finished_template
@@ -176,22 +194,50 @@ def build_and_save_emails(data_by_participant, recipients, success_template_file
             save_email_messages(label, email_body, 'Informationen zu Ihrer Teilnahme an unserem Online-Experiment', email)
 
 
+def participant_data_only(data_by_week):
+    filtered_data = dict()
+    for i in range(1, 5):
+        filtered_week_data = list()
+        for row in data_by_week[f'week{i}']:
+            filtered_row_data = dict()
+            for key, value in row.items():
+                if (key.startswith('participant.') or key.startswith('session.')) and key not in EXCLUDES:
+                    filtered_row_data[key] = value
+            filtered_week_data.append(filtered_row_data)
+        filtered_data[f'week{i}'] = filtered_week_data
+    return filtered_data
+
+
 def main():
     # data from experiments
     data_by_week = read_data_from_files()
-    data_by_participant = aggregate_data_by_participant(data_by_week)
 
-    for label in data_by_participant.keys():
-        # check if they completed all weeks
-        weekly_payoffs_set = [data_by_participant[label]['self'][f'week{i}']['participant.week_payoff_set'] for i in range(1, 5)]
-        data_by_participant[label]['self']['study_completed'] = all(weekly_payoffs_set)
+    # filter for necessary data
+    selected_data_by_week = participant_data_only(data_by_week)
 
-    # recipients from hroot
-    all_recipients = get_recipient_data('data/Recipients.xlsx')
-    df = all_recipients.loc[:49]  # get 50 first entries, because other entries are duplicates (secondary emails)
+    # print(calculate_dictator_payoffs(selected_data_by_week['week1']))
+
+    # manipulate test data to have a known unfinished participant
+    selected_data_by_week['week1'][0]['participant.is_finished'] = '0'
+    selected_data_by_week['week1'][4]['participant.is_finished'] = '0'
+    # print(calculate_dictator_payoffs(selected_data_by_week['week1']))
+    # print(calculate_public_payoffs(selected_data_by_week['week1']))
+    print(calculate_minimum_payoffs(selected_data_by_week['week1']))
+
+    # data by participants
+    # data_by_participant = aggregate_data_by_participant(selected_data_by_week)
+
+    # for label in data_by_participant.keys():
+    #     # check if they completed all weeks
+    #     weekly_is_finished = [data_by_participant[label]['self'][f'week{i}']['participant.is_finished'] for i in range(1, 5)]
+    #     data_by_participant[label]['self']['study_completed'] = all(weekly_is_finished)
+    # 
+    # # recipients from hroot
+    # all_recipients = get_recipient_data('data/Recipients.xlsx')
+    # df = all_recipients.loc[:49]  # get 50 first entries, because other entries are duplicates (secondary emails)
 
     # email preparation
-    build_and_save_emails(data_by_participant, df)
+    # build_and_save_emails(data_by_participant, df)
 
 
 if __name__ == '__main__':
