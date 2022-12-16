@@ -1,0 +1,43 @@
+week_to_pay,game_to_pay,final_payoff,partner_id,role,decision,partner_decision,payoff,first,last,email,iban
+2,dictator,14.0,34,recipient,,100,100.0,Christian,Aufenanger,christian.aufenanger@student.uibk.ac.at,DE88200411550856125000
+4,minimum,12.75,30,,75,75,87.5,Yannika,Baier,yannika.baier@student.uibk.ac.at,AT922050303302333418
+4,dictator,14,40,recipient,,0,0.0,Katharina,Böhm,eva.boehm@student.uibk.ac.at,DE63760905000003983200
+2,minimum,11.8,21,,78,100,78.0,Lea Marie,Buchegger,lea.buchegger@student.uibk.ac.at,AT693699000009234675
+2,trust,25.3,49,p2,25,50,213.0,Michael,Gross,m.gross@student.uibk.ac.at,AT622050303302559095
+1,public,16.7,23,,21,39,127.0,Anna,Gruber,a.gruber@student.uibk.ac.at,AT823437000001721117
+2,trust,14.0,35,p2,35,0,100.0,Frederik,Hahn,frederik.hahn@student.uibk.ac.at,AT572050303302183698
+1,public,21.5,48,,25,100,175.0,Sofie,Hanifle,sofie.hanifle@edu.fhg-tirol.ac.at,AT792050303302830389
+3,minimum,10.0,12,,20,20,60.0,Clarissa,Hauser,clarissa.hauser@student.uibk.ac.at,AT983743100002497238
+1,public,13.5,14,,65,10,95.0,Maren,Hering,maren.hering@student.uibk.ac.at,DE48790500000047952585
+3,dictator,19.4,,dictator,46,,154.0,Leonie,Hintner,leonie.hintner@student.uibk.ac.at,AT122050800001495837
+2,minimum,9.0,43,,100,50,50.0,Frederik,Hoch,frederik.hoch@student.uibk.ac.at,DE35500105175418085109
+2,trust,20.8,29,p2,50,45,168.0,Alexa,Huber,alexa.huber@student.uibk.ac.at,AT871200010023681108
+1,minimum,7.3,10,,100,33,33.0,Anton,Koeplin,anton.koeplin@student.uibk.ac.at,DE23110101002611298425
+4,minimum,11.5,39,,100,75,75.0,Yannic,Lerch,yannic.lerch@student.uibk.ac.at,AT624501000060066545
+1,minimum,11.45,33,,69,59,74.5,Timo ,Mantl,timo.mantl@student.uibk.ac.at,AT554239003100005257
+3,dictator,24.0,,dictator,0,,200.0,Nicole,Marjanovic,nicole.marjanovic@student.uibk.ac.at,AT553600000003742111
+1,minimum,14.0,35,,100,100,100.0,Maxime,Moreaux,maxime.moreaux@student.uibk.ac.at,LU120019695587053000
+3,trust,15.0,14,p1,29,45,110.0,Amina,Moujahid,amina.moujahid@student.uibk.ac.at,IT10T0604558250000005003428
+2,trust,23.5,46,p2,44,56,195.0,Dominik,Müller,csaw1774@student.uibk.ac.at,AT732011184681702100
+1,public,21.5,3,,25,100,175.0,Lorena,Müllmann,lorena.muellmann@student.uibk.ac.at,AT703637300000134486
+4,minimum,8.35,14,,18,49,43.5,Angelina,Netzer,angelina.netzer@student.i-med.ac.at,AT092060200001204809
+4,public,14.12,15,,50,14,101.2,Carmen,Oberhuber,carmen.oberhuber@student.uibk.ac.at,IT34B0803558820000301257315
+1,dictator,14.0,16,recipient,,100,100.0,Patricia,Pazur,patricia.pazur@student.uibk.ac.at,DE25120300001077292256
+3,dictator,4,22,recipient,,0,0.0,Maddalena,Pescollderungg,maddalena.pescollderungg@student.uibk.ac.at,IT62Z0801058181000307013663
+2,minimum,12.0,25,,80,100,80.0,Maxime,Picard,maxime.picard@student.uibk.ac.at,IT44A0364601600526113208583
+2,dictator,24.0,46,dictator,0,,200.0,Cristian,Pinzaru,cristian.pinzaru@student.uibk.ac.at,5.35686E+15
+1,public,20.8,17,,60,100,168.0,Bastian,Posch,bastian.posch@student.uibk.ac.at,DE05360602950078487011
+3,minimum,10.9,26,,50,44,69.0,Anna-Lena,Prohaska,anna-lena.prohaska@student.uibk.ac.at,AT051200010036552932
+4,minimum,14.0,36,,100,100,100.0,Hannes,Psenner,hannes.psenner@student.uibk.ac.at,DE59100110012620787626
+3,trust,30.5,8,p2,0,55,265.0,Jonas,Ratzenböck,jonas.ratzenboeck@student.uibk.ac.at,AT113475000000024935
+4,trust,9.8,32,p1,59,10,58.0,Valentina,Sassmann,valentina.sassmann@student.uibk.ac.at,AT813600000003749306
+2,minimum,9.0,49,,100,50,50.0,Selin,Scherer,selin.scherer@student.uibk.ac.at,IT02Q0825558161000301255819
+4,public,17.8,48,,50,60,138.0,Christoph,Schneider,csap5884@student.uibk.ac.at,AT244073000000120804
+2,minimum,11.5,33,,50,50,75.0,Julius ,Schwarz,julius.schwarz@student.uibk.ac.at,DE40200411440883044000
+1,trust,30.3,24,p2,11,61,263.0,Jasmin,Spiegel,jasmin.spiegel@student.uibk.ac.at,AT882060200001581784
+2,trust,24.0,43,p1,50,100,200.0,Constanze Maria,Steinmetz,constanze.steinmetz@student.uibk.ac.at,DE23600501017495075667
+1,trust,19.0,25,p2,34,25,150.0,Catherine,Thilmany,catherine.thilmany@student.uibk.ac.at,LU590099780024210718
+4,trust,29.8,31,p1,79,100,258.0,Jacqueline Luise,Vones,jacqueline.vones@student.uibk.ac.at,AT512050303300251372
+4,public,16.8,1,,60,50,128.0,Carina,Walder,carina.walder@student.i-med.ac.at,AT412050303301429035
+3,dictator,4,1,recipient,,0,0.0,Birgit,Waldner,birgit.waldner@student.i-med.ac.at,AT031921080341722322
+4,public,18.72,29,,100,84,147.20000000000002,Andreas,Zollner,andreas.zollner@i-med.ac.at,AT271921080689862359

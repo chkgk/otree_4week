@@ -1,0 +1,43 @@
+name,recipientEmail,paymentReference,receiverType,amountCurrency,amount,sourceCurrency,targetCurrency,IBAN
+Christian Aufenanger,christian.aufenanger@student.uibk.ac.at,Auszahlung,PERSON,source,14.0,EUR,EUR,DE88200411550856125000
+Yannika Baier,yannika.baier@student.uibk.ac.at,Auszahlung,PERSON,source,12.75,EUR,EUR,AT922050303302333418
+Katharina Böhm,eva.boehm@student.uibk.ac.at,Auszahlung,PERSON,source,14,EUR,EUR,DE63760905000003983200
+Lea Marie Buchegger,lea.buchegger@student.uibk.ac.at,Auszahlung,PERSON,source,11.8,EUR,EUR,AT693699000009234675
+Michael Gross,m.gross@student.uibk.ac.at,Auszahlung,PERSON,source,25.3,EUR,EUR,AT622050303302559095
+Anna Gruber,a.gruber@student.uibk.ac.at,Auszahlung,PERSON,source,16.7,EUR,EUR,AT823437000001721117
+Frederik Hahn,frederik.hahn@student.uibk.ac.at,Auszahlung,PERSON,source,14.0,EUR,EUR,AT572050303302183698
+Sofie Hanifle,sofie.hanifle@edu.fhg-tirol.ac.at,Auszahlung,PERSON,source,21.5,EUR,EUR,AT792050303302830389
+Clarissa Hauser,clarissa.hauser@student.uibk.ac.at,Auszahlung,PERSON,source,10.0,EUR,EUR,AT983743100002497238
+Maren Hering,maren.hering@student.uibk.ac.at,Auszahlung,PERSON,source,13.5,EUR,EUR,DE48790500000047952585
+Leonie Hintner,leonie.hintner@student.uibk.ac.at,Auszahlung,PERSON,source,19.4,EUR,EUR,AT122050800001495837
+Frederik Hoch,frederik.hoch@student.uibk.ac.at,Auszahlung,PERSON,source,9.0,EUR,EUR,DE35500105175418085109
+Alexa Huber,alexa.huber@student.uibk.ac.at,Auszahlung,PERSON,source,20.8,EUR,EUR,AT871200010023681108
+Anton Koeplin,anton.koeplin@student.uibk.ac.at,Auszahlung,PERSON,source,7.3,EUR,EUR,DE23110101002611298425
+Yannic Lerch,yannic.lerch@student.uibk.ac.at,Auszahlung,PERSON,source,11.5,EUR,EUR,AT624501000060066545
+Timo  Mantl,timo.mantl@student.uibk.ac.at,Auszahlung,PERSON,source,11.45,EUR,EUR,AT554239003100005257
+Nicole Marjanovic,nicole.marjanovic@student.uibk.ac.at,Auszahlung,PERSON,source,24.0,EUR,EUR,AT553600000003742111
+Maxime Moreaux,maxime.moreaux@student.uibk.ac.at,Auszahlung,PERSON,source,14.0,EUR,EUR,LU120019695587053000
+Amina Moujahid,amina.moujahid@student.uibk.ac.at,Auszahlung,PERSON,source,15.0,EUR,EUR,IT10T0604558250000005003428
+Dominik Müller,csaw1774@student.uibk.ac.at,Auszahlung,PERSON,source,23.5,EUR,EUR,AT732011184681702100
+Lorena Müllmann,lorena.muellmann@student.uibk.ac.at,Auszahlung,PERSON,source,21.5,EUR,EUR,AT703637300000134486
+Angelina Netzer,angelina.netzer@student.i-med.ac.at,Auszahlung,PERSON,source,8.35,EUR,EUR,AT092060200001204809
+Carmen Oberhuber,carmen.oberhuber@student.uibk.ac.at,Auszahlung,PERSON,source,14.12,EUR,EUR,IT34B0803558820000301257315
+Patricia Pazur,patricia.pazur@student.uibk.ac.at,Auszahlung,PERSON,source,14.0,EUR,EUR,DE25120300001077292256
+Maddalena Pescollderungg,maddalena.pescollderungg@student.uibk.ac.at,Auszahlung,PERSON,source,4,EUR,EUR,IT62Z0801058181000307013663
+Maxime Picard,maxime.picard@student.uibk.ac.at,Auszahlung,PERSON,source,12.0,EUR,EUR,IT44A0364601600526113208583
+Cristian Pinzaru,cristian.pinzaru@student.uibk.ac.at,Auszahlung,PERSON,source,24.0,EUR,EUR,5.35686E+15
+Bastian Posch,bastian.posch@student.uibk.ac.at,Auszahlung,PERSON,source,20.8,EUR,EUR,DE05360602950078487011
+Anna-Lena Prohaska,anna-lena.prohaska@student.uibk.ac.at,Auszahlung,PERSON,source,10.9,EUR,EUR,AT051200010036552932
+Hannes Psenner,hannes.psenner@student.uibk.ac.at,Auszahlung,PERSON,source,14.0,EUR,EUR,DE59100110012620787626
+Jonas Ratzenböck,jonas.ratzenboeck@student.uibk.ac.at,Auszahlung,PERSON,source,30.5,EUR,EUR,AT113475000000024935
+Valentina Sassmann,valentina.sassmann@student.uibk.ac.at,Auszahlung,PERSON,source,9.8,EUR,EUR,AT813600000003749306
+Selin Scherer,selin.scherer@student.uibk.ac.at,Auszahlung,PERSON,source,9.0,EUR,EUR,IT02Q0825558161000301255819
+Christoph Schneider,csap5884@student.uibk.ac.at,Auszahlung,PERSON,source,17.8,EUR,EUR,AT244073000000120804
+Julius  Schwarz,julius.schwarz@student.uibk.ac.at,Auszahlung,PERSON,source,11.5,EUR,EUR,DE40200411440883044000
+Jasmin Spiegel,jasmin.spiegel@student.uibk.ac.at,Auszahlung,PERSON,source,30.3,EUR,EUR,AT882060200001581784
+Constanze Maria Steinmetz,constanze.steinmetz@student.uibk.ac.at,Auszahlung,PERSON,source,24.0,EUR,EUR,DE23600501017495075667
+Catherine Thilmany,catherine.thilmany@student.uibk.ac.at,Auszahlung,PERSON,source,19.0,EUR,EUR,LU590099780024210718
+Jacqueline Luise Vones,jacqueline.vones@student.uibk.ac.at,Auszahlung,PERSON,source,29.8,EUR,EUR,AT512050303300251372
+Carina Walder,carina.walder@student.i-med.ac.at,Auszahlung,PERSON,source,16.8,EUR,EUR,AT412050303301429035
+Birgit Waldner,birgit.waldner@student.i-med.ac.at,Auszahlung,PERSON,source,4,EUR,EUR,AT031921080341722322
+Andreas Zollner,andreas.zollner@i-med.ac.at,Auszahlung,PERSON,source,18.72,EUR,EUR,AT271921080689862359
