@@ -1,0 +1,118 @@
+{{ block title }}
+    Situation {{ spiel }}: Anleitung
+{{ endblock }}
+{{ block content }}
+
+    <p>
+        Spieler A und Spieler B besitzen jeweils {{ C.PUBLIC_ENDOWMENT }}. Beide können einen beliebigen Betrag in einen gemeinsamen Topf einzahlen. Eingezahlte Beträge werden mit dem Faktor {{ multiplier }} multipliziert. Der Gesamtbetrag im Topf wird dann gleichmäßig auf beide Spieler aufgeteilt. Punkte, die die Spieler nicht einzahlen, behalten Sie. Verschieben Sie die Regler, um sich mit den Auswirkungen der Entscheidungen von Spieler A und Spieler B auf die Auszahlungen beider Spieler vertraut zu machen. Ihre endgültige Entscheidung treffen Sie auf der nächsten Seite.
+        
+    </p>
+
+<div class="container rounded" style="background-color: #e3e3e3;">
+        <h3>Beispiel</h3>
+        <p>
+            <label for="id_public_p1_sent"><b>Entscheidung von Spieler A:</b></label><br>
+            <input type="range" min="0" max="100" step="1" value="50" name="public_p1_sent" id="id_public_p1_sent">
+        </p>
+        
+        <p>
+            <label for="id_public_p2_sent"><b>Entscheidung von Spieler B:</b></label><br>
+            <input type="range" min="0" max="100" step="1" value="50" name="public_p2_sent" id="id_public_p2_sent">
+        </p>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-33">Spieler A zahlt ein</th>
+                    <th class="w-33">Spieler B zahlt ein</th>
+                    <th class="w-33">Gesamtwert des Topfes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span id="amount_p1_sent">0</span> Punkte</td>
+                    <td><span id="amount_p2_sent">0</span> Punkte</td>
+                    <td><span id="amount_pot">0</span> Punkte</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-50">Ergebnis für Spieler A</th>
+                    <th class="w-50">Ergebnis für Spieler B</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="w-50"><span id="amount_p1_total">0</span> Punkte</td>
+                    <td class="w-50"><span id="amount_p2_total">0</span> Punkte</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const mpcr = js_vars.mpcr;
+        const p1_slider = document.getElementById('id_public_p1_sent');
+        const p2_slider = document.getElementById('id_public_p2_sent');
+        const p1_sent = document.getElementById('amount_p1_sent');
+        const p2_sent = document.getElementById('amount_p2_sent');
+        const pot = document.getElementById('amount_pot');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        const p1_total = document.getElementById('amount_p1_total');
+        const p2_total = document.getElementById('amount_p2_total');
+        
+        p1_slider.max = endowment;
+        p2_slider.max = endowment;
+        next_button.disabled = true;
+        
+        let p1_sent_val = 50;
+        let p2_sent_val = 50;
+        let pot_size = 0;
+        
+        p1_slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            p1_sent_val = parseInt(this.value);
+            pot_size = (p1_sent_val + p2_sent_val) * mpcr * 2;
+            
+            p1_total.innerText = Math.floor(endowment - p1_sent_val + pot_size / 2);
+            p2_total.innerText = Math.floor(endowment - p2_sent_val + pot_size / 2);
+            
+            p1_sent.innerText = p1_sent_val;
+            pot.innerText = Math.floor(pot_size);
+            
+        });
+        
+        p2_slider.addEventListener('input', function () {
+
+            p2_sent_val = parseInt(this.value);
+            pot_size = (p1_sent_val + p2_sent_val) * mpcr * 2;
+            
+            p1_total.innerText = Math.floor(endowment - p1_sent_val + pot_size / 2);
+            p2_total.innerText = Math.floor(endowment - p2_sent_val + pot_size / 2);
+            
+            p2_sent.innerText = p2_sent_val;
+            pot.innerText = Math.floor(pot_size);
+                        
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

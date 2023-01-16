@@ -1,0 +1,34 @@
+{{ block title }}
+    Fragebogen
+{{ endblock }}
+{{ block content }}
+
+    {{ formfield 'age' }}
+    {{ formfield 'gender' }}
+    {{ formfield 'economics' }}
+    {{ formfield 'game_theory' }}
+    
+    {{ form.risk_attitude.label }}
+    <input type="range" min="0" max="10" step="1" id="id_risk_attitude" name="risk_attitude">
+    <p>Ihre Risikobereitschaft: <b><span id="risk_out"></span></b></p>
+
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}
+
+{{ block scripts }}
+    <script>
+        const risk_input = document.getElementById('id_risk_attitude');
+        const risk_output = document.getElementById('risk_out');
+        const next_button = document.querySelector('.otree-btn-next');
+        next_button.disabled = true;
+        risk_input.addEventListener('input', function() {
+            risk_output.innerText = this.value;
+            next_button.disabled = false;
+        });
+    </script>
+{{ endblock}}

@@ -1,0 +1,90 @@
+{{ block title }}
+    Situation {{ spiel }}: Entscheidung
+{{ endblock }}
+{{ block content }}
+
+    <p class="text-justify">
+        Sie sind <b>Spieler B</b>. Die Punkte, die Spieler A Ihnen schickt, werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert.
+        Sie entscheiden dann, wie viel Prozent der Punkte Sie an Spieler A zurücksenden.
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-50">Wie viel Prozent möchten Sie Spieler A zurückschicken,...</th>
+                <th class="w-25">Entscheidung</th>
+                <th>Sie behalten</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ for field in form }}
+            <tr>
+                <td>{{ field.label }}</td>
+                <td>
+                    {{ field }}
+                    <p class="text-center mb-0"><span id="{{ field.id }}_out"></span>%</p>
+                </td>
+                <td><span id="{{ field.id }}_own"></span></td>
+            </tr>
+            {{ endfor }}
+            
+        </tbody>
+    </table>
+
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        
+        let sliders = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        const input_fields = document.querySelectorAll("input[type='number']");
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        next_button.disabled = true;
+         
+        for (let f of input_fields) {
+            f.type = 'range';
+            f.removeAttribute('inputmode');
+            f.removeAttribute('class');
+            if(f && f.nextSibling) {
+                f.parentNode.removeChild(f.nextSibling)
+            }
+            f.addEventListener('input', function() {
+               const selected = document.getElementById(this.id + '_out');
+               const own_points = document.getElementById(this.id + '_own');
+               
+               selected.innerText = this.value;
+               
+               let i = parseInt(this.id.split('_').pop()) - 1;
+               
+                              
+               let own_min = Math.round(js_vars.endowment * js_vars.multiplier / 10 * i - (i * js_vars.endowment * js_vars.multiplier / 10 * this.value/100))
+               let own_max = Math.round(js_vars.endowment * js_vars.multiplier / 10 * (i+1) - ((i + 1) * js_vars.endowment * js_vars.multiplier / 10 * this.value/100));
+               
+               if (i > 0 && this.value == 0) {
+                   own_min += 1;
+               }
+               
+               let text = "";
+               if (own_min === own_max) {
+                   text = own_min + " Punkte" 
+               } else {
+                   text = "[" + own_min + ", " + own_max + "] Punkte";
+               }
+
+               own_points.innerText = text;
+               
+               sliders[i] = 1;
+               if (sliders.reduce((a,b)=>a+b) === 10) {
+                   next_button.disabled = false;
+               }
+            });
+        }
+    </script>
+{{ endblock}}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

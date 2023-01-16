@@ -1,0 +1,27 @@
+{{ block title }}
+    Group Selection
+{{ endblock }}
+{{ block content }}
+
+    <p style="color: red; font-weight: bold">EXPERIMENTER USE ONLY</p>
+
+    <p>Select which group this tablet / computer is for:</p>
+
+    <button class="btn btn-primary" name="group_number" value="1">1</button>
+    <button class="btn btn-primary" name="group_number" value="2">2</button>
+    <button class="btn btn-primary" name="group_number" value="3">3</button>
+    <button class="btn btn-primary" name="group_number" value="4">4</button>
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+<style>
+    button {
+        width: 7em;
+        height: 7em;
+        margin-right: 20px;
+        font-size: large !important;
+    }
+</style>
+{{ endblock }}

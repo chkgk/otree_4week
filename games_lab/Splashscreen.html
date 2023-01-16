@@ -1,0 +1,32 @@
+{{ block title }}
+    Situation {{ spiel }}
+{{ endblock }}
+{{ block content }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+    <style>
+        .otree-timer {
+            background-color: #fff;
+            border: 0;
+            padding: 0;
+        }
+        .otree-title {
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            color: #000;
+        }
+    </style>
+{{ endblock }}
+
+{{ block scripts }}
+    <script>
+        const box = document.querySelector('.otree-timer');
+        const para = box.querySelector(':first-child');
+        para.firstChild.textContent = "Entscheidungssituation {{ spiel }} folgt in: ";
+    </script>
+{{ endblock }}  

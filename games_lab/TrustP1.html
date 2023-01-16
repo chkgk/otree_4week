@@ -1,0 +1,66 @@
+{{ block title }}
+    Situation {{ spiel }}: Entscheidung
+{{ endblock }}
+{{ block content }}
+
+    <p class="text-justify">
+        Sie sind <b>Spieler A</b> und besitzen {{ C.TRUST_ENDOWMENT }}, von denen Sie eine beliebige Anzahl an Spieler B senden können.
+        Punkte, die Sie an Spieler B senden, werden mit dem Faktor {{ C.TRUST_MULTIPLIER }} multipliziert. Spieler B entscheidet danach, wie viele Punkte er Ihnen von diesem Betrag zurücksendet.
+    </p>
+
+    <p>
+        <label for="id_trust_p1_sent">Punkte senden:</label><br>
+        <input type="range" min="0" max="100" step="1" value="50" name="trust_p1_sent" id="id_trust_p1_sent">
+    </p>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="w-33">Sie behalten</th>
+                <th class="w-33">Sie senden an Spieler B</th>
+                <th class="w-33">Spieler B erhält (Faktor {{ C.TRUST_MULTIPLIER }})</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="w-33"><span id="amount_kept">0</span> Punkte</td>
+                <td class="w-33"><span id="amount_sent">0</span> Punkte</td>
+                <td class="w-33"><span id="amount_received">0</span> Punkte</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {{ next_button }}
+
+{{ endblock }}
+
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const endowment = js_vars.endowment;
+        const multiplier = js_vars.multiplier;
+        const slider = document.getElementById('id_trust_p1_sent');
+        const sent = document.getElementById('amount_sent');
+        const kept = document.getElementById('amount_kept');
+        const received = document.getElementById('amount_received');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        slider.max = endowment;
+        next_button.disabled = true;
+        
+        slider.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            sent.innerText = this.value;
+            kept.innerText = endowment - this.value;
+            received.innerText = this.value * multiplier;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

@@ -1,0 +1,24 @@
+{{ block title }}
+    Auszahlung
+{{ endblock }}
+{{ block content }}
+
+    <p>
+        Zur Abwicklung der Auszahlung am Ende des Experiments benötigen wir Ihre Kontoverbindung. 
+        Bitte geben Sie die IBAN des Bankkontos an, auf die wir die Auszahlung überweisen sollen.
+    </p>
+
+    <p>
+        <em>Bitte geben Sie die IBAN inklusive der beiden Anfangsbuchstaben, aber ohne Leertasten ein. </em>
+    </p>
+   
+    {{ formfields }}
+
+    {{ next_button }}
+
+{{ endblock }}
+
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+{{ endblock }}

@@ -1,0 +1,20 @@
+{{ block title }}
+    Ideensammlung
+{{ endblock }}
+{{ block content }}
+    <p>Bitte Sammeln Sie nun von allen Gruppenmitgliedern die Ideen, die Sie für die Verwendung eines Ziegelsteins gesammelt haben.<br>
+    Machen Sie dazu eine Sichtpunktsammlung in folgendem Textfeld:</p>
+
+    {{ formfields }}
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+    <style>
+        textarea {
+            height: 10em;
+        }
+    </style>
+{{ endblock }}

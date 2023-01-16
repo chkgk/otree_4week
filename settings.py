@@ -2,6 +2,26 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
+        name='instructions_lab',
+        app_sequence=['instructions_lab'],
+        num_demo_participants=12,
+    ),
+    dict(
+        name='group_task',
+        app_sequence=['group_task'],
+        num_demo_participants=4,
+    ),
+    dict(
+        name='games_lab',
+        app_sequence=['games_lab'],
+        num_demo_participants=12,
+    ),
+    dict(
+        name='questionnaires_lab',
+        app_sequence=['questionnaires_lab'],
+        num_demo_participants=4,
+    ),
+    dict(
         name='Week1',
         app_sequence=['instructions', 'games', 'questionnaires'],
         num_demo_participants=4,

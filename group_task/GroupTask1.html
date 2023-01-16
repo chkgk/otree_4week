@@ -1,0 +1,17 @@
+{{ block title }}
+    Vorstellung
+{{ endblock }}
+{{ block content }}
+    <p>
+        Ihre erste Aufgabe als Gruppe ist es, sich gegenseitig kurz vorzustellen. Nennen Sie reihum beispielsweise Ihren Vornamen, Ihr Studienfach und in welchem Semester Sie studieren.
+    </p>
+
+    <p>Wenn Sie diese Aufgabe abgeschlossen haben, klicken Sie auf weiter.</p>
+    {{ formfields }}
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+{{ endblock }}

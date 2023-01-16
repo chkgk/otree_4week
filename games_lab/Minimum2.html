@@ -1,0 +1,43 @@
+{{ block title }}
+    Situation {{ spiel }}: Entscheidung
+{{ endblock }}
+{{ block content }}
+
+    <p>
+        Wählen Sie nun eine Zahl zwischen 0 und {{ C.MINIMUM_MAX_NUMBER }}.
+    </p>
+    <p>
+        <label for="id_minimum_number_selected">Ihre Zahl:</label> <span id="own_selected"></span><br>
+        <input type="range" min="0" max="100" step="1" value="50" name="minimum_number_selected" id="id_minimum_number_selected">
+    </p>
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block scripts }}
+    <script type="text/javascript">
+        let slider_touched = false;
+        const max_number = js_vars.max_number;
+        const p1 = js_vars.p1;
+        const p2 = js_vars.p2;
+        const own = document.getElementById('id_minimum_number_selected');
+        const own_out = document.getElementById('own_selected');
+        const next_button = document.querySelector('.otree-btn-next');
+        
+        own.max = max_number;
+        next_button.disabled = true;
+        
+        
+        own.addEventListener('input', function () {
+            if (!slider_touched) {
+                slider_touched = true;
+                next_button.disabled = false;
+            }
+            own_out.innerText = this.value;
+        });
+    </script>
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css'}}">
+{{ endblock }}

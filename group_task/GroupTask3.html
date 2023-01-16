@@ -1,0 +1,20 @@
+{{ block title }}
+    Weitere Ideen
+{{ endblock }}
+{{ block content }}
+    <p>Der letzte Teil der Aufgabe besteht darin, weitere Ideen zu entwickeln.</p>
+    <p>Brainstormen Sie erneut in der Gruppe und lassen Sie sich drei weitere kreative Verwendungen für einen Ziegelstein einfallen, die bislang nicht genannt wurden. Tragen Sie die neuen Ideen in folgendem Textfeld ein:</p>
+
+    {{ formfields }}
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+    <style>
+        textarea {
+            height: 10em;
+        }
+    </style>
+{{ endblock }}
