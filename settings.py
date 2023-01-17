@@ -12,9 +12,16 @@ SESSION_CONFIGS = [
         num_demo_participants=4,
     ),
     dict(
-        name='games_lab',
-        app_sequence=['games_lab'],
+        name='games_lab_1',
+        app_sequence=['games_lab', 'questionnaires_lab'],
         num_demo_participants=12,
+        labels="_rooms/pilot1.txt"
+    ),
+    dict(
+        name='games_lab_2',
+        app_sequence=['games_lab', 'questionnaires_lab'],
+        num_demo_participants=12,
+        labels="_rooms/pilot2.txt"
     ),
     dict(
         name='questionnaires_lab',
@@ -121,7 +128,8 @@ PARTICIPANT_FIELDS = [
     'dictator_decision',
     'trust_decision',
     'public_decision',
-    'minimum_decision'
+    'minimum_decision',
+    'pos_in_group'
 ]
 SESSION_FIELDS = []
 
@@ -156,16 +164,20 @@ ROOMS = [
     ),
     dict(
         name='pilot_1',
-        display_name='Pilot 1',
+        display_name='Pilot 1 - Online',
         participant_label_file='_rooms/pilot1.txt',
         use_secure_urls=True
     ),
     dict(
         name='pilot_2',
-        display_name='Pilot 2',
+        display_name='Pilot 2 - Online',
         participant_label_file='_rooms/pilot2.txt',
         use_secure_urls=True
     ),
+    dict(
+        name='lab_pilot',
+        display_name='Pilot - Lab'
+    )
 ]
 
 # DEBUG=False

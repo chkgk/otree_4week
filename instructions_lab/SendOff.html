@@ -2,13 +2,13 @@
     Gruppenzuordnung
 {{ endblock }}
 {{ block content }}
-    <p>Die Zeit ist nun um. Es folgt die Gruppenaufgabe.<br>
-        Ihnen wurde Gruppe <b>{{ group.id }}</b> zugelost.
+    <p>
+        Ihnen wurde <b>Gruppe {{ group.id_in_subsession }}</b> zugelost.
     </p>
-    {% if group.id < 3 %}
+    {% if group.id_in_subsession == 1 or group.id_in_subsession == 4 %}
         <p>
             Ihre Gruppe trifft sich im 
-            {% if group.id == 1 %}
+            {% if group.id_in_subsession == 1 %}
             vorderen
             {% else %}
             hinteren
@@ -16,12 +16,12 @@
             Bereich dieses Raums.
         </p>
         <p>
-            Bitte finden Sie nun die anderen Mitglieder Ihrer Gruppe.
+            Bitte treffen Sie sich nun mit den anderen Mitgliedern Ihrer Gruppe.
         </p>
     {% else %}
         <p>
             Ihre Gruppe trifft sich im
-            {% if group.id == 3 %}
+            {% if group.id_in_subsession == 2 %}
             vorderen
             {% else %}
             hinteren
@@ -29,7 +29,7 @@
             Bereich des Nebenraums. Der Experimentator wird Sie in den anderen Raum bringen.
         </p>
         <p>
-            Bitte finden Sie im Nebenraum die anderen Mitglieder Ihrer Gruppe.
+            Bitte treffen Sie sich im Nebenraum mit den anderen Mitgliedern Ihrer Gruppe.
         </p>
     {% endif %}
 

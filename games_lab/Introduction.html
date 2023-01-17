@@ -1,0 +1,17 @@
+{{ block title }}
+    Willkommen
+{{ endblock }}
+{{ block content }}
+
+    <p class="text-justify">
+        Sie durchlaufen nun insgesamt vier Entscheidungssituationen. Für jede Situation erhalten Sie zunächst eine Anleitung und ein Beispiel. Auf einer zweiten Seite folgt die auszahlungsrelevante Entscheidung. Im Anschluss an die vier Entscheidungssituationen werden Sie noch einen kurzen Fragebogen zu Ihrer Person absolvieren. Dieser Teil der Studie wird nicht mehr als 10 Minuten in Anspruch nehmen.
+    </p>
+
+    {{ formfields }}<br>
+    {{ next_button }}
+
+{{ endblock }}
+
+{{ block styles }}
+    <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+{{ endblock }}

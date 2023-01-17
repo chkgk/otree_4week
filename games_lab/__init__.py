@@ -91,12 +91,7 @@ def creating_session(subsession: Subsession):
                 # print('task_rounds is', task_rounds)
                 p.participant.task_rounds = task_rounds
 
-        # read csv data
-        # config_file_name = 'games_lab/participant_config_demo.csv' if otree.settings.DEBUG else 'games_lab/participant_config.csv'
-        # participant_config = read_csv(config_file_name, ParticipantConfig)
-
-
-        with open('_rooms/pilot.txt') as f:
+        with open(subsession.session.config.get('labels', '_rooms/pilot1.txt')) as f:
             labels = [l.strip() for l in f.readlines()]
         for p, label in zip(subsession.get_players(), labels):
             p.participant.label = label
@@ -122,27 +117,16 @@ def creating_session(subsession: Subsession):
 
         subsession.set_group_matrix([l for _, l in group_matrix.items()])
 
-        for p in subsession.get_players():
-            part = p.participant
-            if p.id_in_group % 2 == 1:  # odd
-                part.dictator_this_week = True
-                part.trust_sender_this_week = True
-            else:
-                part.dictator_this_week = False
-                part.trust_sender_this_week = False
 
-
-# def _get_partner(subsession, partner_id, game):
-#     partner = None
-#     for p in subsession.get_players():
-#         if p.id_in_subsession == partner_id:
-#             partner = p.in_round(p.participant.task_rounds.get(game, 1))
-#     return partner
-
-def _get_partner(id_in_group, group, game):
+def _get_partner(player, game):
     partner = None
-    for p in group.get_players():
-        if p.id_in_group == id_in_group - 1:
+    if player.participant.pos_in_group < 4:
+        partner_pos = player.participant.pos_in_group + 3
+    else:
+        partner_pos = player.participant.pos_in_group - 3
+
+    for p in player.group.get_players():
+        if p.participant.pos_in_group == partner_pos:
             partner = p.in_round(p.participant.task_rounds.get(game, 1))
     return partner
 
@@ -171,7 +155,7 @@ def calculate_dictator_payoff(player: Player):
         part.dictator_payoff = C.DICTATOR_ENDOWMENT - player.in_round(dictator_round).dictator_amount_sent
         part.dictator_payoff_set = True
 
-        partner = _get_partner(player.id_in_group, player.group, 'dictator')
+        partner = _get_partner(player, 'dictator')
         # print(player.id_in_subsession, partner)
         partner.participant.dictator_payoff = player.in_round(dictator_round).dictator_amount_sent
         partner.participant.dictator_payoff_set = True
@@ -184,7 +168,7 @@ def calculate_trust_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['trust_game'])
-    other = _get_partner(player.id_in_group, player.group, 'trust_game')
+    other = _get_partner(player, 'trust_game')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
@@ -246,7 +230,7 @@ def calculate_public_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['public_good'])
-    other = _get_partner(player.id_in_group, player.group, 'public_good')
+    other = _get_partner(player, 'public_good')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
@@ -270,7 +254,7 @@ def calculate_minimum_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['minimum_effort'])
-    other = _get_partner(player.id_in_group, player.group, 'minimum_effort')
+    other = _get_partner(player, 'minimum_effort')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
@@ -307,12 +291,30 @@ def determine_week_payoff(player: Player):
     part.week_payoff = player.payoff
     part.week_payoff_set = True
 
-    if part.pay_week == player.subsession.session.config.get('week', 1):
-        part.final_payoff = cu(part.week_payoff).to_real_world_currency(player.session) + player.session.config.get('participation_fee', 0.0)
-        part.finished = 1
+    part.final_payoff = cu(part.week_payoff).to_real_world_currency(player.session) + player.session.config.get('participation_fee', 0.0)
+    part.finished = 1
 
+
+def set_role(player):
+    started_participants = sum([p.participant._index_in_pages > 1 for p in player.group.get_players()])
+    player.participant.pos_in_group = started_participants + 1
+
+    if started_participants < 3:
+        player.participant.dictator_this_week = True
+        player.participant.trust_sender_this_week = True
+    else:
+        player.participant.dictator_this_week = False
+        player.participant.trust_sender_this_week = False
 
 # PAGES
+class Introduction(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        return player.round_number == 1
+
+    def before_next_page(player: Player, timeout_happened):
+        set_role(player)
+
 class DictatorIntro(Page):
     @staticmethod
     def is_displayed(player: Player):
@@ -578,6 +580,7 @@ class Minimum2(Page):
 
 
 page_sequence = [
+    Introduction,
     DictatorIntro,
     Dictator1,
     Dictator2,

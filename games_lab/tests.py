@@ -5,6 +5,9 @@ from . import *
 class PlayerBot(Bot):
     def play_round(self):
 
+        if self.round_number == 1:
+            yield Introduction
+
         if self.round_number == self.participant.task_rounds['dictator']:
             yield Submission(DictatorIntro, check_html=False)
             yield Dictator1

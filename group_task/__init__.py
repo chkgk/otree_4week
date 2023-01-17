@@ -21,7 +21,7 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    group_number = models.IntegerField(choices=[1, 2, 3, 4], label="Group number:", widget=widgets.RadioSelect)
+    group_number = models.IntegerField(choices=[1, 2, 3, 4], label="Group number:")
 
     individual_ideas = models.LongStringField(label="Ideensammlung der einzelnen Gruppenmitglieder:")
     group_ideas = models.LongStringField(label="Ideensammlung der Gruppe:")
@@ -31,7 +31,7 @@ class Player(BasePlayer):
 class GroupSelection(Page):
     form_model = 'player'
     form_fields = ['group_number']
-    
+
 
 class GroupAnnouncement(Page):
     pass
