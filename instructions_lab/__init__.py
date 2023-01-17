@@ -55,16 +55,20 @@ class SendOff(Page):
 
 #FUNCTIONS
 def creating_session(subsession):
-    subsession.group_randomly()
+    with open('_rooms/pilot.txt') as f:
+        labels = [l.strip() for l in f.readlines()]
+    for p, label in zip(subsession.get_players(), labels):
+        p.participant.label = label
+
 
 def custom_export(players):
     # header row
-    yield ['session', 'participant_code', 'group_id', 'email']
+    yield ['session_code', 'id_in_subsession', 'participant_label', 'group_id', 'email']
     for p in players:
         participant = p.participant
         group = p.group
         session = p.session
-        yield [session.code, participant.code, group.id, p.email]
+        yield [session.code, p.id_in_subsession, participant.code, group.id, p.email]
 
 
 page_sequence = [Consent, GeneralInstructions, TaskInstructions, Matching, SendOff]

@@ -154,6 +154,18 @@ ROOMS = [
         participant_label_file='_rooms/4week_demo.txt',
         use_secure_urls=True
     ),
+    dict(
+        name='pilot_1',
+        display_name='Pilot 1',
+        participant_label_file='_rooms/pilot1.txt',
+        use_secure_urls=True
+    ),
+    dict(
+        name='pilot_2',
+        display_name='Pilot 2',
+        participant_label_file='_rooms/pilot2.txt',
+        use_secure_urls=True
+    ),
 ]
 
-DEBUG=False
+# DEBUG=False

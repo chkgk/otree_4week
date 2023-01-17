@@ -10,7 +10,7 @@ Games over 4 weeks, by Christian König-Kersting
 
 class C(BaseConstants):
     NAME_IN_URL = 'games_lab'
-    PLAYERS_PER_GROUP = None
+    PLAYERS_PER_GROUP = 6
     GAMES = ['dictator', 'trust_game', 'public_good', 'minimum_effort']
     NUM_ROUNDS = len(GAMES)
 
@@ -28,6 +28,13 @@ class C(BaseConstants):
     MINIMUM_MAX_NUMBER = 100
     MINIMUM_P1 = 1
     MINIMUM_P2 = 0.5
+    
+    GROUP_MAP = {
+        'ga': 1,
+        'gb': 2,
+        'gc': 3,
+        'gd': 4
+    }
 
 
 class Subsession(BaseSubsession):
@@ -39,6 +46,8 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
+    group_number = models.IntegerField()
+    
     dictator_amount_sent = models.CurrencyField(min=0, max=C.DICTATOR_ENDOWMENT, label="Wie viele Punkte möchten Sie dem anderen Spieler geben?")
 
     trust_p1_sent = models.CurrencyField(min=0, max=C.TRUST_ENDOWMENT, label="Wie viele Punkte möchten Sie an den anderen Spieler senden?")
@@ -60,21 +69,11 @@ class Player(BasePlayer):
 
 
 class ParticipantConfig(ExtraModel):
+    session_code = models.StringField()
     id_in_subsession = models.IntegerField()
-    code = models.StringField()
-    dictator_1 = models.BooleanField()
-    dictator_2 = models.BooleanField()
-    dictator_3 = models.BooleanField()
-    dictator_4 = models.BooleanField()
-    trust_sender_1 = models.BooleanField()
-    trust_sender_2 = models.BooleanField()
-    trust_sender_3 = models.BooleanField()
-    trust_sender_4 = models.BooleanField()
-    partner_id_1 = models.IntegerField()
-    partner_id_2 = models.IntegerField()
-    partner_id_3 = models.IntegerField()
-    partner_id_4 = models.IntegerField()
-    pay_week = models.IntegerField()
+    participant_label = models.StringField()
+    group_id = models.IntegerField()
+    email = models.StringField()
 
 
 # FUNCTIONS
@@ -93,8 +92,16 @@ def creating_session(subsession: Subsession):
                 p.participant.task_rounds = task_rounds
 
         # read csv data
-        config_file_name = 'games/participant_config_demo.csv' if otree.settings.DEBUG else 'games/participant_config.csv'
-        participant_config = read_csv(config_file_name, ParticipantConfig)
+        # config_file_name = 'games_lab/participant_config_demo.csv' if otree.settings.DEBUG else 'games_lab/participant_config.csv'
+        # participant_config = read_csv(config_file_name, ParticipantConfig)
+
+
+        with open('_rooms/pilot.txt') as f:
+            labels = [l.strip() for l in f.readlines()]
+        for p, label in zip(subsession.get_players(), labels):
+            p.participant.label = label
+
+        group_matrix = dict()
         for p in subsession.get_players():
             part = p.participant
 
@@ -107,33 +114,35 @@ def creating_session(subsession: Subsession):
             part.pay_game = random.choice(['dictator', 'trust', 'public', 'minimum'])
             part.final_payoff = 0.0
 
-            for row in participant_config:
-                if row['id_in_subsession'] == p.id_in_subsession:  # refine to code / participant_label?
-                    part.label = row['code']
-                    part.dictator_1 = row['dictator_1']
-                    part.dictator_2 = row['dictator_2']
-                    part.dictator_3 = row['dictator_3']
-                    part.dictator_4 = row['dictator_4']
-                    part.trust_sender_1 = row['trust_sender_1']
-                    part.trust_sender_2 = row['trust_sender_2']
-                    part.trust_sender_3 = row['trust_sender_3']
-                    part.trust_sender_4 = row['trust_sender_4']
-                    part.partner_id_1 = row['partner_id_1']
-                    part.partner_id_2 = row['partner_id_2']
-                    part.partner_id_3 = row['partner_id_3']
-                    part.partner_id_4 = row['partner_id_4']
-                    part.pay_week = row['pay_week']
+            gn = C.GROUP_MAP[part.label[-2:]]
+            if not group_matrix.get(gn, False):
+                group_matrix[gn] = [p.id_in_subsession]
+            else:
+                group_matrix[gn].append(p.id_in_subsession)
 
-                    if 'week' in subsession.session.config:
-                        part.dictator_this_week = row[f"dictator_{subsession.session.config['week']}"]
-                        part.trust_sender_this_week = row[f"dictator_{subsession.session.config['week']}"]
-                        part.partner_id_this_week = row[f"partner_id_{subsession.session.config['week']}"]
+        subsession.set_group_matrix([l for _, l in group_matrix.items()])
+
+        for p in subsession.get_players():
+            part = p.participant
+            if p.id_in_group % 2 == 1:  # odd
+                part.dictator_this_week = True
+                part.trust_sender_this_week = True
+            else:
+                part.dictator_this_week = False
+                part.trust_sender_this_week = False
 
 
-def _get_partner(subsession, partner_id, game):
+# def _get_partner(subsession, partner_id, game):
+#     partner = None
+#     for p in subsession.get_players():
+#         if p.id_in_subsession == partner_id:
+#             partner = p.in_round(p.participant.task_rounds.get(game, 1))
+#     return partner
+
+def _get_partner(id_in_group, group, game):
     partner = None
-    for p in subsession.get_players():
-        if p.id_in_subsession == partner_id:
+    for p in group.get_players():
+        if p.id_in_group == id_in_group - 1:
             partner = p.in_round(p.participant.task_rounds.get(game, 1))
     return partner
 
@@ -162,7 +171,7 @@ def calculate_dictator_payoff(player: Player):
         part.dictator_payoff = C.DICTATOR_ENDOWMENT - player.in_round(dictator_round).dictator_amount_sent
         part.dictator_payoff_set = True
 
-        partner = _get_partner(player.subsession, part.partner_id_this_week, 'dictator')
+        partner = _get_partner(player.id_in_group, player.group, 'dictator')
         # print(player.id_in_subsession, partner)
         partner.participant.dictator_payoff = player.in_round(dictator_round).dictator_amount_sent
         partner.participant.dictator_payoff_set = True
@@ -175,7 +184,7 @@ def calculate_trust_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['trust_game'])
-    other = _get_partner(player.subsession, part.partner_id_this_week, 'trust_game')
+    other = _get_partner(player.id_in_group, player.group, 'trust_game')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
@@ -237,7 +246,7 @@ def calculate_public_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['public_good'])
-    other = _get_partner(player.subsession, part.partner_id_this_week, 'public_good')
+    other = _get_partner(player.id_in_group, player.group, 'public_good')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
@@ -261,7 +270,7 @@ def calculate_minimum_payoff(player: Player):
         return
 
     myself = player.in_round(part.task_rounds['minimum_effort'])
-    other = _get_partner(player.subsession, part.partner_id_this_week, 'minimum_effort')
+    other = _get_partner(player.id_in_group, player.group, 'minimum_effort')
 
     if not all([myself.participant.is_finished, other.participant.is_finished]):
         return
