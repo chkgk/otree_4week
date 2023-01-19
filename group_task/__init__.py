@@ -38,17 +38,24 @@ class GroupAnnouncement(Page):
 
 
 class GroupTask1(Page):
-    pass
+    def js_vars(player: Player):
+        return dict(timeout_seconds=3*60)
 
 
 class GroupTask2(Page):
     form_model = 'player'
     form_fields = ['individual_ideas']
+    
+    def js_vars(player: Player):
+        return dict(timeout_seconds=5*60)
 
 
 class GroupTask3(Page):
     form_model = 'player'
     form_fields = ['group_ideas']
+    
+    def js_vars(player: Player):
+        return dict(timeout_seconds=10*60)
 
 
 class LastPage(Page):

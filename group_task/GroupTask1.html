@@ -2,8 +2,12 @@
     Vorstellung
 {{ endblock }}
 {{ block content }}
+    <div class="alert alert-danger" id="reminder_box">
+        Ihre Zeit ist um. Bitte schließen Sie die Aufgabe ab und klicken Sie auf weiter!
+    </div>
+
     <p>
-        Ihre erste Aufgabe als Gruppe ist es, sich gegenseitig kurz vorzustellen. Nennen Sie reihum beispielsweise Ihren Vornamen, Ihr Studienfach und in welchem Semester Sie studieren.
+        Ihre erste Aufgabe als Gruppe ist es, sich gegenseitig kurz vorzustellen. Nennen Sie reihum beispielsweise Ihren Vornamen und Ihr Studienfach.
     </p>
 
     <p>Wenn Sie diese Aufgabe abgeschlossen haben, klicken Sie auf weiter.</p>
@@ -14,4 +18,20 @@
 
 {{ block styles }}
     <link rel="stylesheet" href="{{ static 'global/custom.css' }}">
+    <style>
+        #reminder_box 
+    </style>
+{{ endblock }}
+
+{{ block scripts }}
+    <script>
+        const reminder_box = $('#reminder_box');
+        reminder_box.hide();
+        
+        setTimeout(
+            function () {
+                reminder_box.show();
+            }, js_vars.timeout_seconds*1000); 
+    </script>
+
 {{ endblock }}

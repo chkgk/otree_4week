@@ -1,9 +1,14 @@
 {{ block title }}
-    Ideensammlung
+    Aufgabe 1
 {{ endblock }}
 {{ block content }}
-    <p>Bitte Sammeln Sie nun von allen Gruppenmitgliedern die Ideen, die Sie für die Verwendung eines Ziegelsteins gesammelt haben.<br>
-    Machen Sie dazu eine Sichtpunktsammlung in folgendem Textfeld:</p>
+    <div class="alert alert-danger" id="reminder_box">
+        Ihre Zeit ist um. Bitte schließen Sie die Aufgabe ab und klicken Sie auf weiter!
+    </div>
+    <p>
+        Bitte sammeln Sie nun von allen Gruppenmitgliedern die Ideen, die Sie für die Verwendung eines Ziegelsteins finden konnten. Sie haben 5 Minuten Zeit. 
+Nummerieren Sie die Ideen fortlaufend.
+    </p>
 
     {{ formfields }}
     {{ next_button }}
@@ -17,4 +22,17 @@
             height: 10em;
         }
     </style>
+{{ endblock }}
+
+{{ block scripts }}
+    <script>
+        const reminder_box = $('#reminder_box');
+        reminder_box.hide();
+        
+        setTimeout(
+            function () {
+                reminder_box.show();
+            }, js_vars.timeout_seconds*1000); 
+    </script>
+
 {{ endblock }}

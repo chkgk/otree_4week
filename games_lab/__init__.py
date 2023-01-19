@@ -126,24 +126,48 @@ def _get_partner(player, game):
         partner_pos = player.participant.pos_in_group - 3
 
     for p in player.group.get_players():
-        if p.participant.pos_in_group == partner_pos:
-            partner = p.in_round(p.participant.task_rounds.get(game, 1))
-    return partner
+        if p.participant.vars.get("pos_in_group", 0) == partner_pos:
+            return p.in_round(p.participant.task_rounds.get(game, 1))
+
+# not used
+def _get_partner_pos(player):
+    if player.participant.pos_in_group < 4:
+        partner_pos = player.participant.pos_in_group + 3
+    else:
+        partner_pos = player.participant.pos_in_group - 3
+    return partner_pos
 
 
 def calculate_payoffs(player: Player):
     player.participant.is_finished = True
 
-    calculate_dictator_payoff(player)
-    calculate_trust_payoff(player)
-    calculate_public_payoff(player)
-    calculate_minimum_payoff(player)
+    calc_dictator_payoff(player)
+    calc_trust_payoff(player)
+    calc_public_payoff(player)
+    calc_minimum_payoff(player)
 
     # run determine week payoffs for everyone
     for p in player.subsession.get_players():
         determine_week_payoff(p)
 
+def calc_dictator_payoff(player: Player):
+    part = player.participant
+    if part.dictator_payoff_set:
+        return
 
+    dictator_round = part.task_rounds['dictator']
+
+    if part.dictator_this_week:
+        part.dictator_decision = player.in_round(dictator_round).dictator_amount_sent
+        part.dictator_payoff = C.DICTATOR_ENDOWMENT - player.in_round(dictator_round).dictator_amount_sent
+        part.dictator_payoff_set = True
+
+    else:
+        partner = _get_partner(player, 'dictator')
+        part.dictator_payoff = partner.dictator_amount_sent
+        part.dictator_payoff_set = True
+
+# deprecated
 def calculate_dictator_payoff(player: Player):
     part = player.participant
     if part.dictator_payoff_set:
@@ -161,6 +185,36 @@ def calculate_dictator_payoff(player: Player):
         partner.participant.dictator_payoff_set = True
 
 
+def calc_trust_payoff(player: Player):
+    part = player.participant
+
+    if part.trust_payoff_set:
+        return
+
+    if not all([player.participant.is_finished, player.participant.pos_in_group > 3]):
+        return
+
+    myself = player.in_round(part.task_rounds['trust_game'])
+    other = _get_partner(player, 'trust_game')
+
+
+    if part.trust_sender_this_week:
+        p1, p2 = myself, other
+    else:
+        p1, p2 = other, myself
+
+    p1_decision, p1_payoff, p2_decision, p2_payoff = _trust_game_payoff(p1, p2)
+
+    p1.participant.trust_decision = p1_decision
+    p2.participant.trust_decision = p2_decision
+
+    p1.participant.trust_payoff = p1_payoff
+    p2.participant.trust_payoff = p2_payoff
+
+    p1.participant.trust_payoff_set = True
+    p2.participant.trust_payoff_set = True
+
+# deprecated
 def calculate_trust_payoff(player: Player):
     part = player.participant
 
@@ -223,6 +277,33 @@ def _trust_game_payoff(p1, p2):
     return p1_sends, p1_payoff, p2_sends_back, p2_payoff
 
 
+    
+
+def calc_public_payoff(player: Player):
+    part = player.participant
+
+    if part.public_payoff_set:
+        return
+
+    if not all([player.participant.is_finished, player.participant.pos_in_group > 3]):
+        return
+
+    myself = player.in_round(part.task_rounds['public_good'])
+    other = _get_partner(player, 'public_good')
+
+    public_good_pot = myself.public_contribution + other.public_contribution
+
+    part.public_decision = myself.public_contribution
+    other.participant.public_decision = other.public_contribution
+
+    part.public_payoff = C.PUBLIC_ENDOWMENT - myself.public_contribution + C.PUBLIC_MPCR * public_good_pot
+    other.participant.public_payoff = C.PUBLIC_ENDOWMENT - other.public_contribution + C.PUBLIC_MPCR * public_good_pot
+
+    part.public_payoff_set = True
+    other.participant.public_payoff_set = True
+
+
+# deprecated
 def calculate_public_payoff(player: Player):
     part = player.participant
 
@@ -247,6 +328,40 @@ def calculate_public_payoff(player: Player):
     other.participant.public_payoff_set = True
 
 
+
+def calc_minimum_payoff(player: Player):
+    part = player.participant
+
+    if part.minimum_payoff_set:
+        return
+
+    if not all([player.participant.is_finished, player.participant.pos_in_group > 3]):
+        return
+
+
+    myself = player.in_round(part.task_rounds['minimum_effort'])
+    other = _get_partner(player, 'minimum_effort')
+
+    my_number = myself.minimum_number_selected
+    others_number = other.minimum_number_selected
+
+    if my_number >= others_number:
+        my_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
+        others_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
+    else:
+        my_payoff = C.MINIMUM_P1 * my_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - others_number)
+        others_payoff = C.MINIMUM_P1 * others_number + C.MINIMUM_P2 * (C.MINIMUM_MAX_NUMBER - my_number)
+
+    part.minimum_decision = my_number
+    other.participant.minimum_decision = others_number
+
+    part.minimum_payoff = my_payoff
+    other.participant.minimum_payoff = others_payoff
+
+    part.minimum_payoff_set = True
+    other.participant.minimum_payoff_set = True
+
+# deprecated
 def calculate_minimum_payoff(player: Player):
     part = player.participant
 
@@ -305,6 +420,7 @@ def set_role(player):
     else:
         player.participant.dictator_this_week = False
         player.participant.trust_sender_this_week = False
+
 
 # PAGES
 class Introduction(Page):

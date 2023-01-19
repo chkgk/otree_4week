@@ -12,7 +12,7 @@ class C(BaseConstants):
     PLAYERS_PER_GROUP = 6
     NUM_ROUNDS = 1
 
-    BRAINSTORMING_MINUTES = 1 # reset to 7
+    BRAINSTORMING_MINUTES = 5 # reset to 7
 
     GROUP_MAP = {
         'ga': 1,
@@ -36,6 +36,7 @@ class Player(BasePlayer):
                                        label="Ich habe die Informationen gelesen, bin einverstanden und möchte ausdrücklich an der Studie teilnehmen.")
 
     email = models.StringField(label="E-Mail-Adresse:")
+    name = models.StringField(label="Vor- und Nachname:")
     seat_number = models.IntegerField(label="Bitte geben Sie Ihre Sitzplatznummer ein.", min=1, max=24)
     group_number = models.IntegerField()
     label = models.StringField()
@@ -53,7 +54,7 @@ class Consent(Page):
 
 class GeneralInstructions(Page):
     form_model = 'player'
-    form_fields = ['email']
+    form_fields = ['name', 'email']
 
 
 class TaskInstructions(Page):
@@ -93,10 +94,7 @@ def custom_export(players):
     # header row
     yield ['session_code', 'id_in_subsession', 'participant_label', 'group_id', 'email']
     for p in players:
-        participant = p.participant
-        group = p.group
-        session = p.session
-        yield [session.code, p.id_in_subsession, p.label, p.group_number, p.email]
+        yield [p.session.code, p.id_in_subsession, p.label, p.group_number, p.name, p.email]
 
 
 page_sequence = [SeatNumber, Consent, GeneralInstructions, TaskInstructions, Matching, SendOff]

@@ -1,9 +1,19 @@
 {{ block title }}
-    Weitere Ideen
+    Aufgabe 2
 {{ endblock }}
 {{ block content }}
-    <p>Der letzte Teil der Aufgabe besteht darin, weitere Ideen zu entwickeln.</p>
-    <p>Brainstormen Sie erneut in der Gruppe und lassen Sie sich drei weitere kreative Verwendungen für einen Ziegelstein einfallen, die bislang nicht genannt wurden. Tragen Sie die neuen Ideen in folgendem Textfeld ein:</p>
+    <div class="alert alert-danger" id="reminder_box">
+        Ihre Zeit ist um. Bitte schließen Sie die Aufgabe ab und klicken Sie auf weiter!
+    </div>
+    <p>
+        Sie haben jetzt 10 Minuten Zeit um als Team so viele originelle und kreative Verwendungsmöglichkeiten für einen <b>Kleiderbügel</b> zu finden, wie möglich.
+    </p>
+    <p>
+        Zu Erinnerung: Denken Sie sich so viele originelle und kreative Verwendungen für einen <b>Kleiderbügel</b> aus, wie Sie können. Das Ziel ist es kreative Ideen zu entwickeln, die von anderen als clever, ungewöhnlich, interessant, amüsant, innovativ oder andersartig wahrgenommen werden. Ihre Ideen müssen nicht praktisch oder realistisch sein; sie dürfen sogar verrückt oder komisch sein, solange sie kreativ sind.
+    </p>
+    <p>
+        Tragen Sie Ihre Ideen in folgendem Textfeld ein und nummerieren Sie sie. Sie sollten mindestens 6 Ideen generieren!
+    </p>
 
     {{ formfields }}
     {{ next_button }}
@@ -17,4 +27,17 @@
             height: 10em;
         }
     </style>
+{{ endblock }}
+
+{{ block scripts }}
+    <script>
+        const reminder_box = $('#reminder_box');
+        reminder_box.hide();
+        
+        setTimeout(
+            function () {
+                reminder_box.show();
+            }, js_vars.timeout_seconds*1000); 
+    </script>
+
 {{ endblock }}
