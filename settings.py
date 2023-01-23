@@ -2,10 +2,18 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-        display_name="1. Individual Lab Task",
-        name='instructions_lab',
+        display_name="1a. Individual Lab Task - Session 1",
+        name='instructions_lab_1',
         app_sequence=['instructions_lab'],
         num_demo_participants=12,
+        labels="_rooms/pilot1.txt"
+    ),
+    dict(
+        display_name="1b. Individual Lab Task - Session 2",
+        name='instructions_lab_2',
+        app_sequence=['instructions_lab'],
+        num_demo_participants=12,
+        labels="_rooms/pilot2.txt"
     ),
     dict(
         display_name="2. Group Lab Task",
@@ -14,14 +22,14 @@ SESSION_CONFIGS = [
         num_demo_participants=4,
     ),
     dict(
-        display_name="3a. Online Task for first session",
+        display_name="3a. Online Task - Session 1",
         name='games_lab_1',
         app_sequence=['games_lab', 'questionnaires_lab'],
         num_demo_participants=12,
         labels="_rooms/pilot1.txt"
     ),
     dict(
-        display_name="3b. Online Task for second session",
+        display_name="3b. Online Task - Session 2",
         name='games_lab_2',
         app_sequence=['games_lab', 'questionnaires_lab'],
         num_demo_participants=12,
@@ -181,6 +189,10 @@ ROOMS = [
     dict(
         name='lab_pilot',
         display_name='Pilot - Lab'
+    ),
+    dict(
+        name='lab_group',
+        display_name='Pilot - Group'
     )
 ]
 
